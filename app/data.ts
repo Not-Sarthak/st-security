@@ -1,25 +1,13 @@
-type Project = {
-  name: string
-  description: string
-  link: string
-  video: string
-  id: string
-}
-
-type WorkExperience = {
-  company: string
-  title: string
-  start: string
-  end: string
-  link: string
-  id: string
-}
-
 type BlogPost = {
   title: string
+  category: string
   description: string
   link: string
+  date: string
+  stolen: number | string
   uid: string
+  auditedBy?: string
+  writtenBy?: string
 }
 
 type SocialLink = {
@@ -27,93 +15,304 @@ type SocialLink = {
   link: string
 }
 
-export const PROJECTS: Project[] = [
-  {
-    name: 'Motion Primitives Pro',
-    description:
-      'Advanced components and templates to craft beautiful websites.',
-    link: 'https://pro.motion-primitives.com/',
-    video:
-      'https://res.cloudinary.com/read-cv/video/upload/t_v_b/v1/1/profileItems/W2azTw5BVbMXfj7F53G92hMVIn32/newProfileItem/d898be8a-7037-4c71-af0c-8997239b050d.mp4?_a=DATAdtAAZAA0',
-    id: 'project1',
-  },
-  {
-    name: 'Motion Primitives',
-    description: 'UI kit to make beautiful, animated interfaces.',
-    link: 'https://motion-primitives.com/',
-    video:
-      'https://res.cloudinary.com/read-cv/video/upload/t_v_b/v1/1/profileItems/W2azTw5BVbMXfj7F53G92hMVIn32/XSfIvT7BUWbPRXhrbLed/ee6871c9-8400-49d2-8be9-e32675eabf7e.mp4?_a=DATAdtAAZAA0',
-    id: 'project2',
-  },
-]
-
-export const WORK_EXPERIENCE: WorkExperience[] = [
-  {
-    company: 'Reglazed Studio',
-    title: 'CEO',
-    start: '2024',
-    end: 'Present',
-    link: 'https://ibelick.com',
-    id: 'work1',
-  },
-  {
-    company: 'Freelance',
-    title: 'Design Engineer',
-    start: '2022',
-    end: '2024',
-    link: 'https://ibelick.com',
-    id: 'work2',
-  },
-  {
-    company: 'Freelance',
-    title: 'Front-end Developer',
-    start: '2017',
-    end: 'Present',
-    link: 'https://ibelick.com',
-    id: 'work3',
-  },
-]
-
 export const BLOG_POSTS: BlogPost[] = [
   {
-    title: 'Exploring the Intersection of Design, AI, and Design Engineering',
-    description: 'How AI is changing the way we design',
-    link: '/blog/exploring-the-intersection-of-design-ai-and-design-engineering',
+    title: 'DogWif',
+    category: 'Tooling',
+    description: 'Private Key Leak',
+    link: '/blog/dogwif',
     uid: 'blog-1',
+    date: '2025-01-28',
+    stolen: '$10 Million',
+    auditedBy: '-',
+    writtenBy: '0xSarthak13',
   },
   {
-    title: 'Why I left my job to start my own company',
-    description:
-      'A deep dive into my decision to leave my job and start my own company',
-    link: '/blog/exploring-the-intersection-of-design-ai-and-design-engineering',
+    title: 'Solana web3.js',
+    category: 'Tooling',
+    description: 'Supply Chain Attack',
+    link: '/blog/solana-web3-js',
     uid: 'blog-2',
+    date: '2024-12-02',
+    stolen: '$160K',
+    auditedBy: '-',
+    writtenBy: '0xSarthak13',
   },
   {
-    title: 'What I learned from my first year of freelancing',
-    description:
-      'A look back at my first year of freelancing and what I learned',
-    link: '/blog/exploring-the-intersection-of-design-ai-and-design-engineering',
+    title: 'PumpSci',
+    category: 'DeSci',
+    description: 'Private Key Leak',
+    link: '/blog/pump-sci',
     uid: 'blog-3',
+    date: '2024-11-25',
+    stolen: '-',
+    auditedBy: '-',
+    writtenBy: '0xSarthak13',
+  },
+  {
+    title: 'Dexx',
+    category: 'DeFi',
+    description: 'Private Key Leak',
+    link: '/blog/dexx',
+    uid: 'blog-4',
+    date: '2024-11-16',
+    stolen: '~30 Million',
+    auditedBy: '-',
+    writtenBy: '0xSarthak13',
+  },
+  {
+    title: 'Parcl',
+    category: 'RWA Tokenization',
+    description: 'Supply Chain Manipulation',
+    link: '/blog/parcl',
+    uid: 'blog-5',
+    date: '2024-08-20',
+    stolen: '-',
+    auditedBy: '-',
+    writtenBy: '0xSarthak13',
+  },
+  {
+    title: 'IO.Net',
+    category: 'DePin',
+    description: 'Account Compromise',
+    link: '/blog/io-net',
+    uid: 'blog-6',
+    date: '2024-08-29',
+    stolen: '-',
+    auditedBy: '-',
+    writtenBy: '0xSarthak13',
+  },
+  {
+    title: 'CondomSOL',
+    category: 'DeFi',
+    description: 'Rug Pull',
+    link: '/blog/condomsol',
+    uid: 'blog-7',
+    date: '2024-08-29',
+    stolen: '0.922 Millions',
+    auditedBy: '-',
+    writtenBy: '0xSarthak13',
+  },
+  {
+    title: 'Pump.fun',
+    category: 'DeFi',
+    description: 'Flashloan Exploit',
+    link: '/blog/pump-fun',
+    uid: 'blog-8',
+    date: '2024-05-16',
+    stolen: '~2 Million',
+    auditedBy: '-',
+    writtenBy: '0xSarthak13',
+  },
+  {
+    title: 'Jupiter',
+    category: 'DeFi',
+    description: 'DDoS Attack',
+    link: '/blog/jupiter',
+    uid: 'blog-9',
+    date: '2024-04-10',
+    stolen: '-',
+    auditedBy: '-',
+    writtenBy: '0xSarthak13',
+  },
+  {
+    title: 'Solareum',
+    category: 'Trading',
+    description: 'Unknown',
+    link: '/blog/solareum',
+    uid: 'blog-10',
+    date: '2024-03-30',
+    stolen: '$1 Million',
+    auditedBy: '-',
+    writtenBy: '0xSarthak13',
+  },
+  {
+    title: 'Saga DAO',
+    category: 'DAO',
+    description: 'Unknown',
+    link: '/blog/saga-dao',
+    uid: 'blog-11',
+    date: '2024-01-25',
+    stolen: '$0.065 Million',
+    auditedBy: '-',
+    writtenBy: '0xSarthak13',
+  },
+  {
+    title: 'MegabotETH',
+    category: 'DeFi',
+    description: 'Rug Pull',
+    link: '/blog/megaboteth',
+    uid: 'blog-12',
+    date: '2023-12-26',
+    stolen: '$742K',
+    auditedBy: '-',
+    writtenBy: '0xSarthak13',
+  },
+  {
+    title: 'Synthetify',
+    category: 'DeFi',
+    description: 'Governance Attack',
+    link: '/blog/synthetify',
+    uid: 'blog-13',
+    date: '2023-10-19',
+    stolen: '-',
+    auditedBy: '-',
+    writtenBy: '0xSarthak13',
+  },
+  {
+    title: 'SVT Token',
+    category: 'DeFi',
+    description: 'Flash Loan Attack',
+    link: '/blog/svt-token',
+    uid: 'blog-14',
+    date: '2023-08-26',
+    stolen: '$400K',
+    auditedBy: '-',
+    writtenBy: '0xSarthak13',
+  },
+  {
+    title: 'Cypher Protocol',
+    category: 'DeFi',
+    description: 'Exploit',
+    link: '/blog/cypher-protocol',
+    uid: 'blog-15',
+    date: '2023-07-08',
+    stolen: '$1 Million',
+    auditedBy: '-',
+    writtenBy: '0xSarthak13',
+  },
+  {
+    title: 'Raydium',
+    category: 'DEX',
+    description: 'Private Key Compromise',
+    link: '/blog/raydium',
+    uid: 'blog-21',
+    date: '2022-12-16',
+    stolen: '$4.4 Million',
+    auditedBy: '-',
+    writtenBy: 'Prastut and 0xDeep',
+  },
+  {
+    title: 'FTX',
+    category: 'Exchange',
+    description: 'Bankruptcy',
+    link: '/blog/ftx',
+    uid: 'blog-24',
+    date: '2022-11-02',
+    stolen: '$8.7 Billion',
+    auditedBy: '-',
+    writtenBy: '0xSarthak13',
+  },
+  {
+    title: 'Solend',
+    category: 'DeFi',
+    description: 'Price Oracle Attack',
+    link: '/blog/solend',
+    uid: 'blog-23',
+    date: '2022-11-02',
+    stolen: '$1.3 Million',
+    auditedBy: '-',
+    writtenBy: 'Prastut and 0xDeep',
+  },
+  {
+    title: 'Mango Markets',
+    category: 'DeFi',
+    description: 'Price Manipulation',
+    link: '/blog/mango-markets',
+    uid: 'blog-17',
+    date: '2022-10-11',
+    stolen: '$115 Million',
+    auditedBy: '-',
+    writtenBy: 'Prastut and 0xDeep',
+  },
+  {
+    title: 'Slope Wallet',
+    category: 'Wallet',
+    description: 'Private Key Leak',
+    link: '/blog/slope-wallet',
+    uid: 'blog-20',
+    date: '2022-08-02',
+    stolen: '$5 Million',
+    auditedBy: '-',
+    writtenBy: 'Prastut and 0xDeep',
+  },
+  {
+    title: 'Nirvana',
+    category: 'Stablecoin',
+    description: 'Flash Loan Attack',
+    link: '/blog/nirvana',
+    uid: 'blog-22',
+    date: '2022-07-28',
+    stolen: '$3.5 Million',
+    auditedBy: 'Sec3 Auto Audit Software',
+    writtenBy: 'Prastut and 0xDeep',
+  },
+  {
+    title: 'Crema',
+    category: 'DeFi',
+    description: 'Faulty Account Validation',
+    link: '/blog/crema',
+    uid: 'blog-19',
+    date: '2022-07-03',
+    stolen: '$8.8 Million',
+    auditedBy: 'Bramah Systems',
+    writtenBy: 'Prastut and 0xDeep',
+  },
+  {
+    title: 'Cashio',
+    category: 'Stablecoin',
+    description: 'Faulty Account Validation',
+    link: '/blog/cashio',
+    uid: 'blog-18',
+    date: '2022-03-23',
+    stolen: '$48 Million',
+    auditedBy: 'Unaudited',
+    writtenBy: 'Prastut and 0xDeep',
+  },
+  {
+    title: 'Wormhole',
+    category: 'Bridge',
+    description: 'Spoofed Signature Attack',
+    link: '/blog/wormhole',
+    uid: 'blog-16',
+    date: '2022-02-02',
+    stolen: '$325 Million',
+    auditedBy: 'Neodyme',
+    writtenBy: 'Prastut and 0xDeep',
+  },
+  {
+    title: 'Jet',
+    category: 'DeFi',
+    description: 'Vulnerability',
+    link: '/blog/jet',
+    uid: 'blog-25',
+    date: '2021-12-21',
+    stolen: '-',
+    auditedBy: '-',
+    writtenBy: 'Prastut and 0xDeep',
+  },
+  {
+    title: 'Solend',
+    category: 'DeFi',
+    description: 'Faulty Account Validation',
+    link: '/blog/solend',
+    uid: 'blog-26',
+    date: '2021-08-19',
+    stolen: '-',
+    auditedBy: '-',
+    writtenBy: 'Prastut and 0xDeep',
   },
 ]
 
 export const SOCIAL_LINKS: SocialLink[] = [
   {
     label: 'Github',
-    link: 'https://github.com/ibelick',
+    link: 'https://github.com/Not-Sarthak',
   },
   {
     label: 'Twitter',
-    link: 'https://twitter.com/ibelick',
-  },
-  {
-    label: 'LinkedIn',
-    link: 'https://www.linkedin.com/in/ibelick',
-  },
-  {
-    label: 'Instagram',
-    link: 'https://www.instagram.com/ibelick',
+    link: 'https://twitter.com/0xSarthak13',
   },
 ]
 
-export const EMAIL = 'your@email.com'
+export const EMAIL = 'notsarthakshah@gmail.com'
