@@ -159,7 +159,7 @@ export default function Reports() {
   return (
     <>
       <motion.main
-        className="space-y-8 max-w-4xl mx-auto px-4"
+        className="space-y-8 max-w-4xl mx-auto px-4 sm:px-6"
         variants={VARIANTS_CONTAINER}
         initial="hidden"
         animate="visible"
@@ -167,7 +167,7 @@ export default function Reports() {
         <motion.section
           variants={VARIANTS_SECTION}
           transition={{ duration: 0.4, ease: "easeOut" }}
-          className="mt-6"
+          className="mt-4 sm:mt-6"
         >
           <div className="flex justify-between items-center mb-4">
             <div className="flex space-x-2">
@@ -224,7 +224,7 @@ export default function Reports() {
                 className="overflow-hidden mb-4"
               >
                 <div className="p-4 bg-zinc-50 dark:bg-zinc-900/30 border border-zinc-200 dark:border-zinc-800 rounded-lg space-y-3">
-                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                     <div>
                       <label className="block text-xs text-zinc-500 mb-1">Year</label>
                       <select
@@ -362,25 +362,25 @@ export default function Reports() {
                           href={post.link}
                           data-id={post.uid}
                         >
-                          <div className="p-4">
-                            <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-3">
+                          <div className="p-3 sm:p-4">
+                            <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-2 sm:gap-3">
                               <div className="flex-1">
-                                <div className="flex flex-col md:flex-row md:items-center gap-2 mb-2">
-                                  <h4 className="text-base font-medium text-zinc-900 dark:text-zinc-100">
+                                <div className="flex flex-col md:flex-row md:items-center gap-1.5 sm:gap-2 mb-2">
+                                  <h4 className="text-sm sm:text-base font-medium text-zinc-900 dark:text-zinc-100">
                                     {post.title}
                                   </h4>
                                   <div className="inline-flex items-center">
-                                    <span className="px-2 py-0.5 text-xs rounded-md bg-zinc-100 dark:bg-zinc-800 text-zinc-700 dark:text-zinc-300">
+                                    <span className="px-1.5 sm:px-2 py-0.5 text-xs rounded-md bg-zinc-100 dark:bg-zinc-800 text-zinc-700 dark:text-zinc-300">
                                       {post.category}
                                     </span>
                                   </div>
                                 </div>
                                 
-                                <p className="text-sm text-zinc-600 dark:text-zinc-400 mb-2">
+                                <p className="text-xs sm:text-sm text-zinc-600 dark:text-zinc-400 mb-1.5 sm:mb-2 line-clamp-2 sm:line-clamp-none">
                                   {post.description}
                                 </p>
                                 
-                                <div className="flex flex-wrap gap-x-4 gap-y-1 text-xs text-zinc-500 dark:text-zinc-400">
+                                <div className="flex flex-wrap gap-x-3 sm:gap-x-4 gap-y-1 text-xs text-zinc-500 dark:text-zinc-400">
                                   {post.auditedBy && (
                                     <span className="flex items-center">
                                       <span className="font-medium mr-1">Audited by:</span> 
@@ -397,7 +397,7 @@ export default function Reports() {
                                 </div>
                               </div>
                               
-                              <div className="flex flex-row md:flex-col items-start md:items-end gap-3 md:gap-1.5 text-sm">
+                              <div className="flex flex-row md:flex-col items-start md:items-end gap-2 sm:gap-3 md:gap-1.5 text-xs sm:text-sm mt-1.5 sm:mt-0">
                                 <time className="text-zinc-500 dark:text-zinc-400">
                                   {post.date}
                                 </time>
@@ -427,26 +427,26 @@ export default function Reports() {
           </div>
           
           {totalPages > 1 && (
-            <div className="md:hidden flex justify-center mt-6">
+            <div className="md:hidden flex justify-center mt-4 sm:mt-6">
               <div className="flex items-center space-x-1">
                 <button
                   onClick={() => handlePageChange(Math.max(1, currentPage - 1))}
                   disabled={currentPage === 1 || isPending}
-                  className={`px-3 py-1.5 rounded-md text-sm border border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-800 text-zinc-700 dark:text-zinc-300 disabled:opacity-50 transition-all duration-300 ease-out ${
+                  className={`px-2 sm:px-3 py-1 sm:py-1.5 rounded-md text-xs sm:text-sm border border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-800 text-zinc-700 dark:text-zinc-300 disabled:opacity-50 transition-all duration-300 ease-out ${
                     isPending ? 'animate-pulse' : ''
                   }`}
                 >
                   Previous
                 </button>
                 
-                <div className="text-sm text-zinc-600 dark:text-zinc-400 px-2">
+                <div className="text-xs sm:text-sm text-zinc-600 dark:text-zinc-400 px-2">
                   {currentPage} / {totalPages}
                 </div>
                 
                 <button
                   onClick={() => handlePageChange(Math.min(totalPages, currentPage + 1))}
                   disabled={currentPage === totalPages || isPending}
-                  className={`px-3 py-1.5 rounded-md text-sm border border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-800 text-zinc-700 dark:text-zinc-300 disabled:opacity-50 transition-all duration-300 ease-out ${
+                  className={`px-2 sm:px-3 py-1 sm:py-1.5 rounded-md text-xs sm:text-sm border border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-800 text-zinc-700 dark:text-zinc-300 disabled:opacity-50 transition-all duration-300 ease-out ${
                     isPending ? 'animate-pulse' : ''
                   }`}
                 >
@@ -460,7 +460,7 @@ export default function Reports() {
         <motion.section
           variants={VARIANTS_SECTION}
           transition={{ duration: 0.4, ease: "easeOut" }}
-          className="mb-12"
+          className="mb-8 sm:mb-12"
         >
           <h3 className="text-lg font-medium mb-3">Connect</h3>
           <p className="text-zinc-600 dark:text-zinc-400">

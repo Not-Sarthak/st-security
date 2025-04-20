@@ -1,0 +1,166 @@
+import Image from 'next/image';
+
+<Cover
+  src="/covers/wormhole.png"
+  alt="Wormhole"
+  caption="wormhole.com"
+/>
+
+Wormhole - an interoperability protocol that allows transferring assets between different blockchains - got exploited for a whopping $325 million!
+
+This hack is the 5th biggest heist in the history of Defi industry so far, and hence becomes very important to understand how the hack played out.
+
+<Image src="/content/wormhole/wormhole1.png" alt="Wormhole" width={500} height={500} className="mx-auto" />
+
+## Why would you use Wormhole?
+
+Wormhole is a generic message-passing protocol that helps user transfer assets and information across different blockchains.
+
+Say you want to move your USDC from Ethereum to Solana. As there is no way these blockchains can talk with each other, we need a bridge to facilitate the transfer.
+
+Enter Wormhole.
+
+<Image src="/content/wormhole/wormhole2.png" alt="Wormhole" width={500} height={500} className="mx-auto" />
+
+Let's understand at a high level how Wormhole works by taking an example of moving 100 USDC from Ethereum to Solana:
+- First, you will transfer 100 USDC to Wormhole core contract on Ethereum. This would "lock" your 100 USDC inside Wormhole's Ethereum contract.
+- Then Wormhole's Guardians will attest that this transfer was legit or not:
+  - Think of Guardians as the protocol's watchguards.
+  - They observe and verify each deposit for legitimacy and then stamp their approval via signatures.
+  - This signed approval is then handed over to Wormhole's Solana contract
+- Wormhole's Solana contracts, then check the legitimacy of signers.
+  - After everything checks out, Wormhole's Solana Contract now mints an equivalent 100 Wormhole-USDC (wrapped tokens) on Solana.
+- At any time, you can transfer these 100 Wormhole-USDC back to the bridge on Solana side to "unlock" 100 USDC on Ethereum.
+
+Now that you have a basic understanding of how Wormhole works let's understand how the hack went underway.
+
+<Image src="/content/jet/hacker-jet.png" alt="Hacker Wormhole" width={500} height={500} className="mx-auto" />
+
+## How did the hacker steal funds?
+As you read earlier:
+- Guardians are responsible for generating a signed approval that verifies the authenticity of user deposits in Wormhole contracts on blockchain A.
+- This approval is then submitted to Wormhole contracts on blockchain B so it can mint an equivalent value of the user's deposit.
+
+The clever hacker:
+- Figured out a way to spoof Guardian signatures.
+- Used these fake signatures to create a signed approval to mint 120,000 ETH on Solana 😱
+
+Seeing a valid signed approval, Wormhole's Solana contracts minted the 120k Wormhole-ETH on Solana. Now all the hacker had to was to make this "play" money real, which they did by:
+1. Bridging 93,750 Wormhole-ETH to Ethereum
+    - On Solana's side [tx](https://solscan.io/account/2SDN4vEJdCdW3pGyhx2km9gB3LeHzMGLrG2j4uVNZfrx#splTransfer):
+    <Image src="/tx/wormhole-solana.png" alt="Wormhole" width={500} height={500} className="mx-auto" />
+
+    - On Ethereum's side:
+        - [Tx 1](https://etherscan.io/tx/0x4d5201dd4a377f20e61fb8f42e6f929ec16bcec918f0584e39241d15b254a80f)
+        - [Tx 2](https://etherscan.io/tx/0x24c7d855a0a931561e412d809e2596c3fd861cc7385566fd1cb528f9e93e5f14)
+        - [Tx 3](https://etherscan.io/tx/0xd31b155e259a403ebe69831fae0ec2b4bd33dfa090c43b605a57d5c72c4fbbc7)
+
+2. Converting ~26,000 Wormhole-ETH to SOL and USDC on Solana.
+    - [Attacker's Ethereum Wallet](https://etherscan.io/address/0x629e7da20197a5429d30da36e77d06cdf796b71a)
+
+To understand the hack at a technical depth, we first need to run you through some essential technical concepts that will be leveraged inside the technical explanation.
+
+If you are already familiar with Wormhole's architecture, you can straightway move to technical explanation section.
+
+## Technical Concepts:
+This section describes:
+
+1. Wormhole Core Protocol - the base message passing protocol layer.
+2. Guardians - watchful guards that check the validity of messages passed to Wormhole core.
+3. VAA or Verifiable Action Approval - signed messages submitted on the receiving chain.
+4. Token Bridge - the token bridge that builds on top of the Wormhole core to provide the functionality of bridging tokens cross-chain.
+
+### Wormhole Core Protocol
+
+At its core layer, Wormhole is a message-passing protocol that transmits messages across chains.
+
+To do so, it requires the following infrastructure:
+- Wormhole smart contract on each supported chain. Some examples:
+  - Wormhole Core - [Smart Contract on Ethereum](https://etherscan.io/address/0x98f3c9e6E3fAce36bAAd05FE09d375Ef1464288B)
+  - Wormhole Core - [Smart Contract/Program on Solana](https://solana.fm/address/worm2ZoG2kUd4vFXhvjh93UUH596ayRfgQ2MgjNMTth?cluster=mainnet-alpha)
+- Network of guardians that provide signed approvals for all Wormhole messages.
+
+More detailed information about Wormhole can be found [here](https://wormhole.com/docs/).
+
+### Guardians
+
+Wormhole relies upon a set of distributed nodes which monitor messages on several blockchains. This distributed network of nodes is called the Guardian network.
+
+Guardian's role is to observe each message, verify the message's authenticity and sign off on them. There are currently (39 Guardians)[https://wormhole.com/platform/blockchains] standing guard.
+
+Each guardian performs the attestation step in isolation, combining the resulting signatures with other guardians as a final step.
+<Image src="/content/wormhole/wormhole3.png" alt="Guardians" width={500} height={500} className="mx-auto" />
+
+When enough signatures are collected, a multisig is formed.
+
+The multisig represents proof that the majority of Guardians have observed the same message and agreed to its legitimacy.
+
+This multisig is referred to as Verifiable Action Approval (VAA's for short) in Wormhole.
+
+### Verifiable Action Approval (or VAA's)
+To Recap:
+- Wormhole is a message transfer protocol between different blockchains.
+- To send and receive messages between different blockchains, Wormhole core contracts are deployed on each supported chain.
+- Suppose you want to send a message from blockchain A --> blockchain B.
+- Messages emitted by Wormhole core contract on blockchain A need to be verified by the Guardians before they can be sent to blockchain B.
+
+Once the majority of Guardians reach consensus that an observation has been made, the message is wrapped up in a structure called a Verifiable Action Approval (or VAA) which combines the message with the guardian signatures to form a proof.
+
+These VAA's are ultimately what a smart contract on a receiving chain must process to trigger the message instructions on blockchain B.
+<Image src="/content/wormhole/wormhole4.png" alt="VAA" width={500} height={500} className="mx-auto" />
+
+Concept refresher time:
+In the high level explanation of the hack, we mentioned the following:
+
+>The clever hacker figured out a way to spoof guardian signatures. Using these signatures, they submitted an attestation on Wormhole's Solana contract to mint 120,000 ETH on Solana.
+
+Now that you know about VAA's, the hacker was actually able to bypass guardian signatures altogether to generate a valid VAA.
+
+They then used this VAA to trigger the 120k ETH mint to their account!
+
+### Token Bridge
+On top of Wormhole's base message transfer layer, token-bridges are built.
+- Token bridges are separate contracts and must exist on each supported chain. Some examples:
+    - [Token Bridge Contract on Ethereum](https://etherscan.io/address/0x3ee18b2214aff97000d974cf647e7c347e8fa585#:~:text=Wormhole%3A%20Portal%20Token%20Bridge%20%7C%20Address%200x3ee18b2214aff97000d974cf647e7c347e8fa585%20%7C%20Etherscan)
+    - [Token Bridge Contract/Program on Solana](https://solana.fm/address/wormDTUJ6AWPNvk59vGQbDvGJmqbDTdgWgAqcLBCgUb?cluster=mainnet-alpha)
+
+- To transfer assets between a native and a target chain:
+    - Wormhole locks the assets on the native chain inside the token-bridge and generates a transfer message.
+    - This transfer message then gets attested by Guardians and a VAA is generated.
+    - With the VAA submitted to the receiving chain, a user can cause the token-bridge on the target chain to mint the corresponding wrapped tokens.
+    - The holder of the wrapped assets can, at any time, transfer them back to the bridge and thus obtain the corresponding amount of locked tokens on the native chain.
+
+Hopefully, now you have understood all the critical lego blocks to understand the hack.
+
+## Technical Explanation
+Let's start with the exploit transaction and reverse engineer what exactly happened.
+- [Tx where hacker mints 120,000 Wormhole-ETH on Solana](https://solana.fm/tx/2zCz2GgSoSS68eNJENWrYB48dMM1zmH8SZkgYneVDv2G4gRsVfwu5rNXtK5BKFxn7fSqX9BvrBc1rdPAeBEcD6Es?cluster=mainnet-alpha)
+
+    Let's break down the transaction step by step:
+    - Here we can see that 120k ETH has been minted:
+    <Image src="/content/wormhole/wormhole5.png" alt="Wormhole" width={500} height={500} className="mx-auto" />
+
+    - We see that the transaction has been executed by "Wormhole Token Bridge" program and see an encoded `4` has been passed as instruction data:
+    <Image src="/content/wormhole/wormhole6.png" alt="Wormhole" width={500} height={500} className="mx-auto" />
+
+<hr />
+- Let's head over the source code for Wormhole Token Bridge Solana contracts to figure out what function is being called from the above instruction data.
+<Image src="/content/wormhole/wormhole7.png" alt="Wormhole" width={500} height={500} className="mx-auto" />
+    - We zoom into modules/token_bridge folder and find the program's entry point (which is usually inside the [lib.rs](https://github.com/wormhole-foundation/wormhole/blob/8d15138d5754b5e1202ff8581012debef25f7640/solana/modules/token_bridge/program/src/lib.rs) file)
+    <Image src="/content/wormhole/wormhole8.png" alt="Wormhole" width={500} height={500} className="mx-auto" />
+    - We see `complete_wrapped` function at index 4, which checks out with the tx to mint 120k Wormhole-ETH.
+    - Voila, now we can look deeper into this function to see where the exploit lay.
+
+<hr />
+
+- Let's zoom into `complete_wrapped` function:
+    - This function generates an instruction that takes in a `message_acc` account.
+    <Image src="/content/wormhole/wormhole9.png" alt="Wormhole" width={500} height={500} className="mx-auto" />
+    - This message_acc is an account that stores the valid VAA.
+    <Image src="/content/wormhole/wormhole10.png" alt="Wormhole" width={500} height={500} className="mx-auto" />
+
+<hr />
+
+
+
+
