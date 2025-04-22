@@ -161,6 +161,104 @@ Let's start with the exploit transaction and reverse engineer what exactly happe
 
 <hr />
 
+- Without the valid VAA, the complete_wrapped function should not execute. Then how was the hacker able to supply a valid VAA account to complete_wrapped function call?
+  - Let's check the accounts that were supplied by the hacker in the exploit [tx](https://solana.fm/tx/2zCz2GgSoSS68eNJENWrYB48dMM1zmH8SZkgYneVDv2G4gRsVfwu5rNXtK5BKFxn7fSqX9BvrBc1rdPAeBEcD6Es?cluster=mainnet-qn1):
+  <Image src="/content/wormhole/wormhole11.png" alt="Wormhole" width={500} height={500} className="mx-auto" />
 
+  - `message_ac` account corresponds to GvAarWUV8khMLrTRouzBh3xSr8AeLDXxoKNJ6FgxGyg5 on-chain.
+  - Inspecting `GvAarWUV8khMLrTRouzBh3xSr8AeLDXxoKNJ6FgxGyg5` and we see that it's created in a previous tx.
+  <Image src="/content/wormhole/wormhole12.png" alt="Wormhole" width={500} height={500} className="mx-auto" />
 
+  - Inspecting the tx that created the above account, we see that this instruction is executed on the main "Wormhole Program" i.e the Core Bridge Contract!
+  <Image src="/content/wormhole/wormhole13.png" alt="Wormhole" width={500} height={500} className="mx-auto" />
 
+<hr />
+
+- Now we need to move our search to [Wormole core bridge contract on Solana](https://github.com/wormhole-foundation/wormhole/tree/91296e67722032debf04e95c71b3d701d4625c5b/solana/bridge/program/src_)
+  - We zoom into `wormhole/solana/bridge/program/src/instruction.rs` to find that message_acc account is being created by the `post_vaa` function.
+  <Image src="/content/wormhole/wormhole14.png" alt="Wormhole" width={500} height={500} className="mx-auto" />
+
+  - Notice on line 190, `post_vaa` function creates a new account that stores the valid VAA.
+  - Notice on line 189, `signature_set` account is being passed. This account is crucial for `post_vaa` function to run as this account contains the Guardian signatures.
+
+<hr />
+
+- How did the `signature_set` account get created?
+  - Re-checking the tx that called `post_vaa` function, we see that signature_set account corresponds to [`EtMw1nQ4AQaH53RjYz3pRk12rrqWjcYjPDETphYJzmCX`](https://solana.fm/address/EtMw1nQ4AQaH53RjYz3pRk12rrqWjcYjPDETphYJzmCX?cluster=mainnet-alpha)
+  - Inspecting on-chain, we see that this account gets created in this tx.
+  - The above [tx](https://solana.fm/tx/25Zu1L2Q9uk998d5GMnX43t9u9eVBKvbVtgHndkc2GmUFed8Pu73LGW6hiDsmGXHykKUTLkvUdh4yXPdL3Jo4wVS?cluster=mainnet-alpha) calls [verify_signatures](https://github.com/wormhole-foundation/wormhole/blob/91296e67722032debf04e95c71b3d701d4625c5b/solana/bridge/program/src/instructions.rs#L132-L160) on the main Wormhole Program which creates the `signatures_set` account on-chain:
+  <Image src="/content/wormhole/wormhole15.png" alt="Wormhole" width={500} height={500} className="mx-auto" />
+
+<hr />
+
+- Let's zoom into `verify_signatures` function:
+  - What does it do?
+    - It takes a set of signatures provided by the Guardians
+    - Verify the signatures - whether they are legit signatures or not
+    - And finally, store them in a newly created account `signature_set`
+    <Image src="/content/wormhole/wormhole16.png" alt="Wormhole" width={500} height={500} className="mx-auto" />
+  
+  - It outsources the second step i.e the verification of signatures to secp256k1 program.
+    - The `secp256k1` program is a native Solana program - built directly into the core of the Solana blockchain.
+    - It verifies whether the given signatures are correct or not.
+
+  - As observed from `verify_signatures` code here:
+    - Before triggering `verify_signatures` function, `secp256k1` instruction needs to be executed.
+    <Image src="/content/wormhole/wormhole17.png" alt="Wormhole" width={500} height={500} className="mx-auto" />
+
+  - Let's see an example of a valid call for `verify_signatures`:
+    <Image src="/content/wormhole/wormhole18.png" alt="Wormhole" width={500} height={500} className="mx-auto" />
+    Here, you can see that the transaction has two instructions:
+    1. call `secp256k1` to extract signatures from the message
+    <Image src="/content/wormhole/wormhole19.png" alt="Wormhole" width={500} height={500} className="mx-auto" />
+    2. call `verify_signatures` to verify the previous signatures and create the signature_set account.
+    <Image src="/content/wormhole/wormhole20.png" alt="Wormhole" width={500} height={500} className="mx-auto" />
+
+  - Now, the Wormhole contracts used `load_instruction_at` to check whether the instruction before triggering `verify_signatures` is a `secp256k1` verification instruction or not. This is where the vulnerability lay that hacker exploited!
+  <Image src="/content/wormhole/wormhole21.png" alt="Wormhole" width={500} height={500} className="mx-auto" />
+
+## Vulnerability Explained
+To recap so far:
+1. To mint wrapped Wormhole tokens on Solana, one needs to call `complete_wrapped` on Wormhole's Token Bridge contract deployed on Solana.
+2. Function `complete_wrapped` takes in a `message_acc` account which contains valid VAA.
+3. We see that `message_acc` account was created in a previous transaction when `post_vaa` function was called on Wormhole's Core bridge contract deployed on Solana.
+4. We see that `post_vaa` takes in a `signature_set` account which is generated in a previous transaction when `verify_signatures` is called on Wormhole's core bridge contract.
+5. We see that `verify_signatures` executes 2 instructions in sequential order:
+    - call `secp256k1` to extract signatures from the message
+    - call `verify_signatures` to verify the previous signatures and create the `signature_set` account.
+
+Now let's finally understand the vulnerability.
+1. To make sure that `secp256k1` program instruction is executed before triggering `verify_signatures`, Wormhole contracts used `load_instuction_at`
+2. Solana recently deprecated `load_instruction_at` because it does not check whether it's executing against the actual system address.
+<Image src="/content/wormhole/wormhole22.png" alt="Wormhole" width={500} height={500} className="mx-auto" />
+
+3. Ideally, when triggering verify_signatures, one needs to provide the system account [here](https://github.com/wormhole-foundation/wormhole/blob/9a4af890e3e2d4729fe70e43aaced39ba8b33e35/solana/bridge/program/src/instructions.rs#L153).
+Here is the system address provided as input for a legit verify_signatures tx.
+<Image src="/content/wormhole/wormhole23.png" alt="Wormhole" width={500} height={500} className="mx-auto" />
+
+4. But here's the `verify_signatures` trigger call for the fake mint of 120k ETH:
+<Image src="/content/wormhole/wormhole24.png" alt="Wormhole" width={500} height={500} className="mx-auto" />
+
+5. So it means that anyone could:
+    - create a new account
+    - store the same data that Sysvar:Instructions account would have stored.
+    - substitute the account in place of Sysvar:instructions account when calling verify_signatures
+
+6. That's what the hacker did:
+    - They created a fake account with fake instruction data: [2tHS1cXX2h1KBEaadprqELJ6sV9wLoaSdX68FqsrrZRd](https://solana.fm/address/2tHS1cXX2h1KBEaadprqELJ6sV9wLoaSdX68FqsrrZRd?cluster=mainnet-alpha)
+    - Called `verify_signatures` in this tx with the above fake account in the place of `sysvar:instructions`
+    <Image src="/content/wormhole/wormhole25.png" alt="Wormhole" width={500} height={500} className="mx-auto" />
+    - The above tx created a fake `signature_set` in this account: [EtMw1nQ4AQaH53RjYz3pRk12rrqWjcYjPDETphYJzmCX](https://solana.fm/address/EtMw1nQ4AQaH53RjYz3pRk12rrqWjcYjPDETphYJzmCX?cluster=mainnet-alpha)
+    - Used the above `signature_set` account as an input to `post_vaa` function in this [tx](https://solana.fm/tx/2SohoVoPDSdzgsGCgKQPByKQkLAXHrYmvtE7EEqwKi3qUBTGDDJ7DcfYS7YJC2f8xwKVVa6SFUpH5MZ5xcyn1BCK?cluster=mainnet-alpha)
+    - The above tx generated a `message_ac` account: [GvAarWUV8khMLrTRouzBh3xSr8AeLDXxoKNJ6FgxGyg5](https://solana.fm/address/GvAarWUV8khMLrTRouzBh3xSr8AeLDXxoKNJ6FgxGyg5?cluster=mainnet-alpha)
+    - The above `message_ac`c is then inserted as an input to call complete_wrapped function to mint 120k ETH in this [tx](https://solana.fm/tx/2zCz2GgSoSS68eNJENWrYB48dMM1zmH8SZkgYneVDv2G4gRsVfwu5rNXtK5BKFxn7fSqX9BvrBc1rdPAeBEcD6Es?cluster=mainnet-alpha).
+
+## Potential Impact
+For a brief moment, $320 million worth of Wormhole-ETH on Solana was unbacked by deposits on Ethereum side.
+- If the Wormhole-ETH wasn't backed up with Ether, then Defi protocols on Solana that accepted Wormhole-ETH as collateral could become insolvent.
+- Users could have rushed to sell their Wormhole-ETH, causing its value to crash, which could have serious implications for Solana's Defi ecosystem.
+
+Luckily Jump Trading, Wormhole's parent company, decided to front 120k ETH to avoid the above catastrophe and make users whole.
+
+## Official Statement
+Wormhole team's official disclosure is [here](https://wormholecrypto.medium.com/wormhole-incident-report-02-02-22-ad9b8f21eec6).
