@@ -1,0 +1,83 @@
+import Image from 'next/image';
+
+<Cover
+  src="/covers/crema.png"
+  alt="Crema"
+  caption=""
+/>
+
+Crema protocol - a DEX that uses concentrated liquidity - got hacked for $8.8M.
+
+## Why would you use Crema?
+Crema helps:
+
+- Traders with lesser price impact when they swap assets.
+- Liquidity providers with better utilization of the capital supplied.
+<Image src="/content/crema/crema1.png" alt="Crema" width={500} height={500} className="mx-auto" />
+
+Under the hood, Crema swaps assets using Concentrated Liquidity Market Maker (CLMM) which offers a delta of efficiency over Automated Market Makers (AMM) based DEX's.
+<Image src="/content/crema/crema2.png" alt="Crema" width={500} height={500} className="mx-auto" />
+
+Read more here about CLMM model and why it's better than AMM model [here](https://gitbook.crema.finance/product/concentrated-liquidity-market-maker-clmm).
+
+## How did the Hacker Steal Funds?
+
+In DEX's liquidity provider's are paid fees to incentivize them to provide liquidity so that traders can swap assets.
+
+- Under the hood of Crema, the protocol used "Tick" account - a dedicated account that stores price tick data.
+- The data in this Tick account is used to calculate the final LP fees.
+- Now what if one could create a fake Tick account with fake data in it? Then one could extract any amount of LP fees.
+- All that needs to be done is to bypass the protocol's checks on Tick account i.e the protocol gets convinced that it's reading data from a legit Tick account, but inherently it's a fake account.
+
+That's what the clever hacker was able to figure out!
+
+High level view of how the hack worked:
+1. Hacker creates a fake Tick account and loads it up with fake data.
+2. Hacker then creates a batch transaction where:
+   - They take a flash loan from Solend to get access to a large amount of assets
+   - Deposit that liquidity to Crema's pools
+   - Claim a huge amount of fees based on the fake data provided in the fake Tick account.
+   - Withdraw liquidity from Crema
+   - Close flash loan by depositing liquidity to Solend.
+
+In fact, reading [one of the hacker's exploit transaction](https://solscan.io/tx/4FaMTKqha9Uw6hvxg5TQc5W7vRDKxVkfPn5GDMThGYSj3tgyCYSzXzQsAsT3dXDY6yZ26iYieV6bcV7bFDkTZ83W) shows that in one single tx hacker is chaining several (deposit => claim => withdraw) instructions together to repeatedely claim huge amount of LP fees from the pool they are depositing liquidity in.
+<Image src="/content/crema/crema3.png" alt="Crema" width={500} height={500} className="mx-auto" />
+
+As you can see from the above example:
+
+- Hacker takes 3000 stSOL flash loan from Solend.
+- Deposits the same to Crema
+- Then runs the following loop 5 times:
+  - Withdraws 218.82 stSOL and 206.64 SOL as LP fees.
+  - Withdraws 3000 stSOL back.
+  - Deposits 3000 stSOL again.
+- Then the hacker returns 3000 stSOL back to Solend back with 9 additional SOL as Solend charges 0.3% as flash loan fees (src)
+- And voila, hacker is able to steal (218.82 stSOL + 206.64 SOL) * 5 = ~2k SOL
+
+The hacker doesn't stop at one flash loan. In fact, they took out 6 flash loans - each composed of the same deposit => claim => withdraw flow.
+
+1. [Flash loan of 3000 stSOL](https://solscan.io/tx/4FaMTKqha9Uw6hvxg5TQc5W7vRDKxVkfPn5GDMThGYSj3tgyCYSzXzQsAsT3dXDY6yZ26iYieV6bcV7bFDkTZ83W)
+2. [Flash loan of 5,500,000 USDT](https://solscan.io/tx/2TLDzCCFQ2LdApQBhnXBdbYF7ebTmBgZ8MtQFjYE29BbBxHdBgAmyikmK2s76xQRQErPmR8KsE9jLFnJbJHy3Mvn)
+3. [Flash loan of 10,500 mSOL](https://solscan.io/tx/5iTy2smznuB2iQ9rgxP2YmEEGcv8bSvjqntiX8Vscxfr4Jakfnu5wZf1XJ86Xv79wwp1LeXCa6A9L9TLJ3TAoMhh)
+4. [Flash loan of 57,000 stSOL](https://solscan.io/tx/4q5Hs4N2FS6BeuyvgHLCgH6bKzdnAvKuLm59kxSt4REafve2ZqDt7qxVRvWwWk3jQCyhGfKwWsJFeHueXJF5Hrs9)
+5. [Flash loan of 840,000 PAI](https://solscan.io/tx/pit8jmLpxF2bsHTfeQngUM7sR6cvbwXynYnCUHUjybiKaLPKPcRbCFQeoK2pdtquvybSaqpvk4jHJ7GuAb9xn5u)
+6. Flash loan of 400,000 USDH
+
+All the stolen funds were swapped into 69422.9SOL and 6,497,738 USDCet via Jupiter.
+
+The USDCet was then bridged to Ethereum network via Wormhole and swapped to 6064 ETH via Uniswap after that.
+
+## Technical Explanation:
+Hacker's wallet: [Esmx2QjmDZMjJ15yBJ2nhqisjEt7Gqro4jSkofdoVsvY](https://solana.fm/address/Esmx2QjmDZMjJ15yBJ2nhqisjEt7Gqro4jSkofdoVsvY/transactions?cluster=mainnet-alpha)
+1. Created fake Tick account [CiDwX4eMS7hfit1oMHK6MCrgve9HVvgm2PAp7Cz6Bck](https://explorer.solana.com/address/CiDwX4eMS7hfit1oMHK6MCrgve9HVvgm2PAp7Cz6Bck) via this [transaction](https://solana.fm/tx/JdorRBPfKNWnZNhWcjwc9Uz5yYaA15CVjT8kLM12tVUqZUu28CqtVEuJ5KpjWHJmVtL7j7sQVhPHHrByhNEKqej?cluster=mainnet-alpha)
+2. Used this fake Tick account when executing the batch [transaction](https://solscan.io/tx/4FaMTKqha9Uw6hvxg5TQc5W7vRDKxVkfPn5GDMThGYSj3tgyCYSzXzQsAsT3dXDY6yZ26iYieV6bcV7bFDkTZ83W) to take flash loan and deposit that liquidity to Crema:
+<Image src="/content/crema/crema4.png" alt="Crema" width={500} height={500} className="mx-auto" />
+
+## Aftermath of the Hack:
+- Crema put out the following message in an attempt to talk to the hacker in returning funds:
+<Image src="/content/crema/crema5.png" alt="Crema" width={500} height={500} className="mx-auto" />
+
+- And after a while, Crema tweeted that they were able to get ~$8.3 million back from the hacker!
+<Image src="/content/crema/crema6.png" alt="Crema" width={500} height={500} className="mx-auto" />
+
+- To compensate for the remaining loss of funds, Crema also drafted a compensation plan [here](https://medium.com/@Crema.finance/the-compensation-plan-regarding-cremas-exploit-incident-62fb9ba4c4bc)
