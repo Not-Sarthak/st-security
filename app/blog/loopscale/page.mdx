@@ -1,0 +1,72 @@
+import Image from 'next/image';
+
+On [April 27th, 2025](https://x.com/LoopscaleLabs/status/1916183179469246626) 11:30AM EST, LoopScale was the victim of a nearly $5.8 million exploit.
+
+<Cover
+  src="/covers/loopscale.png"
+  alt="LoopScale"
+  caption=""
+/>
+
+## Why would you use LoopScale?
+Loopscale is a modular, order book–based lending protocol on Solana. It enables overcollateralized borrowing and lending across a wide range of digital assets, including staked tokens, liquidity provider positions, and more specialized primitives.
+
+By replacing pooled liquidity and algorithmic rates with direct order book matching, Loopscale improves capital efficiency, enables more precise risk management, and supports new types of markets that are difficult to achieve with traditional DeFi architectures.
+
+Loopscale unlocks new onchain financial products and credit applications, including:
+- Leveraged yield strategies (e.g., JLP, LSTs)
+- Margin for market makers (e.g., Orca Whirlpools)
+- Passive fixed-rate lending via Vaults
+- Structured credit (e.g. undercollateralized loans, tranched lending, credit facilities)
+- Receivables and RWA financing with custom risk parameters
+
+In simple words, Imagine you have $10 in USDC, and you want to borrow $5. Instead of just giving your $10 to someone to borrow $5, you both write down on a piece of paper what you want.
+
+You might say, "I'll give you $10 if you lend me $5." Someone else who has $5 and wants to lend it will see your offer and say, "Okay, I’ll lend you $5," and the trade happens directly between you two.
+
+So, Loopscale is like the piece of paper where you and others can write down how much you want to borrow or lend in USDC, and it helps match you with the right person for a fair trade!
+
+Advantages of Loopscale:
+- Diverse collateral: Use existing DeFi positions (Met, Orca LPs, Natively staked SOL, LSTs, LRTs) as collateral.
+- Custom LTVs per asset, rewarding higher-quality collateral with better terms & categories, in general, to choose from.
+- Lend/borrow any token as long as there is a market.
+
+Limitations of Loopscale:
+- Fixed-rate loans lock funds; unmatched capital earns lower yields from marginfi (no other options). Unlent capital can be withdrawn, but utilization varies.
+- Borrowing requires timely repayment or refinancing enabled; early repayment costs penalties.
+- Solely relies on Pyth (plus provider AMMs for PTs), whereas Kamino layers on TWAP/EWMA, price bands, and multiple oracle sources for stronger depeg protection.
+
+> To understand the hack at a greater depth, we first need to run you through some essential concepts that will be leveraged inside the explanation.
+
+1. Atomic Markets: Loopscale introduces a novel market structure known as Atomic Markets. In this system, each market is defined by specific terms, collateral types, and rates. Lenders set rates per-collateral and per-principal, eliminating the spread between lending and borrowing rates found in traditional pool-based models. This approach allows for more efficient capital utilization and better risk management.
+2. Limit Creditbook (LCB): The Limit Creditbook is a flexible marketplace where loan offers and requests are listed. Borrowers and lenders can place orders specifying loan parameters such as amount, duration, interest rate, and collateral requirements. Once a matching counterparty accepts the offer, a bilateral loan is initiated, and funds are transferred between the parties
+3. Virtual Markets: To address liquidity fragmentation, Loopscale utilizes Virtual Markets. These are predefined loan terms that unify liquidity, minimizing fragmentation. Virtual Markets concentrate liquidity around standardized, popular configurations and support incremental refinement over time, enabling more granular markets as overall liquidity increases. ​
+4. Lockboxes: Lockboxes are programmatically controlled accounts where collateral is escrowed for the duration of the loan. Unlike traditional DeFi platforms, where collateral is pooled and often lent out, Lockboxes ensure that collateral remains segregated and non-transferable, reducing risks such as liquidity mismatches and rehypothecation. ​
+5. Optimized Yield: To address the challenge of unutilized capital waiting to be matched on the order book, Loopscale implements Optimized Yield. This feature automatically routes any unutilized liquidity to integrated pool lending protocols, ensuring lenders earn competitive yields until their orders are filled.
+
+Pool Based Narrative v/s Order Book Based Narrative:
+- Problem with Pool Based Narrative:
+    - Interest Rate Spread ( Borrow rate != Lending rate )
+    - Slow governance-based voting for new pools over natively enabled multi-collateral options
+    - involves systemic risks ( collateral options are limited by design & fixed parameters for all)
+    - cascading effect of loans during market downturns, affecting multiple pools, leading to poor risk pricing & increased chances of insolvency/ automated deleveraging enabled by the protocol.
+<Image src="/content/loopscale/loopscale1.png" alt="LoopScale" width={500} height={500} className="mx-auto" />
+
+- Order book challenges
+    - Liquidity fragmentation and poor UX: Loopscale solves this with Virtual Markets - predefined loan terms unify liquidity, minimizing fragmentation.
+    - Virtual Markets concentrate liquidity around standardized, popular configurations and support incremental refinement over time, enabling more granular markets as overall liquidity increases.
+
+Features offered by Loopscale:
+- Lending Options on Loopscale: 
+    - Lend (Advanced): Control rates, duration, and collateral. Withdraw unused liquidity anytime or trade active loans with accrued interest to reclaim capital.
+    - Vaults - Passive lending yield strategy that doesn't require active management.
+<Image src="/content/loopscale/loopscale2.png" alt="LoopScale" width={500} height={500} className="mx-auto" />
+
+- Borrowing Options on Loopscale:
+    - Borrow with fixed rates and higher LTVs for set terms. Refinance at expiry if matched with a new lender or face a 2-day grace period before liquidation.
+    - Otherwise, the protocol liquidates enough collateral to maintain the health factor & the excess collateral is returned back to the borrower. Adding collateral / Partial Repayment helps improve loan health.
+<Image src="/content/loopscale/loopscale3.png" alt="LoopScale" width={500} height={500} className="mx-auto" />
+
+- Loop: Leverage on Loopscale:
+Loop, like Multiply, leverages yield-bearing assets (e.g., JLP, LSTs) via no-collateral flash loans and fixed-rate loans. Positions can be market-neutral (stablecoins, staked assets) or directional (long/short volatile assets).
+<Image src="/content/loopscale/loopscale4.png" alt="LoopScale" width={500} height={500} className="mx-auto" />

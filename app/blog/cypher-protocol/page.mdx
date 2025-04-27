@@ -1,0 +1,26 @@
+import Image from 'next/image';
+
+<Cover
+  src="/covers/cypher.png"
+  alt="Cypher Protocol"
+  caption=""
+/>
+
+In August 2023, the Cypher Protocol was the victim of a hack. The attacker exploited a vulnerability in the project&apos;s smart contracts to steal an estimated $1 million from the project.
+
+## Why would you use Cypher Protocol?
+Cypher Protocol is a DEX created in Solana. That is, a decentralized advanced trading platform with tokens and derivatives. 
+
+It also has a portion of "borrows" that generate revenue for those who cover them.
+
+It stands out for its difference compared to other DEX, since it has a more complex and detailed interface, so cypher is usually used by more experienced users.
+
+## How did the Hacker Steal Funds?
+The Cypher Protocol enables marginal lending, borrowing, and trading. The protocol is structured so that a primary user account — called CypherAccounts — can have multiple attached CypherSubAccounts. The primary account will cache the data associated with each of its associated sub-accounts.
+
+By default, all sub-accounts are cross-collateralized with the master account, allowing a deposit into one to be used as collateral for a borrow from another. The protocol allows a sub-account to be isolated — disabling this functionality — but an error in the code when switching to an isolated state causes the master account not to track this change.
+
+Another error in the code dealt with margin checks before allowing a borrow. An error in these checks and the fact that oracle price feeds were not yet active allowed a user to perform borrows when they should not have been able to.
+The attacker exploited this vulnerability using multiple different primary accounts. As a result, they were able to drain an estimated $1 million in assets from the Cypher Protocol.
+<Image src="/content/cypher/cypher1.png" alt="Cypher" width={500} height={500} className="mx-auto" />
+

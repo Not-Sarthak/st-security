@@ -1,0 +1,145 @@
+import Image from 'next/image';
+
+<Cover
+  src="/covers/mango.png"
+  alt="Mango Markets"
+  caption=""
+/>
+
+On October 11th 2022, a team comprising of trader named Avraham Eisenberg manipulated $MNGO token price to drain $115M worth of liquidity from Mango Protocol.
+
+Let&apos;s deep dive into how the heist went underway:
+
+## Why would you use Mango Markets?
+
+Mango Markets is Solana's flagship margin trading protocol that provides users with a single venue to lend, borrow, swap, and leverage-trade crypto assets.
+
+Margin trading allows traders to use borrowed funds to amplify their returns, but it also comes with increased risk.
+
+Though there are many other exchanges on Solana for spot trading, Mango Markets became the key venue where you can take leverage to trade crypto assets.
+
+Say you are bullish on $SOL, but you only have $1k USDC to invest.
+
+Here's how you could magnify the returns on your investment:
+- Deposit $1k USDC into your Mango Markets account.
+- Open a leveraged position in SOL, for example, a position worth $10k in SOL using 10x leverage.
+- This means you would be borrowing $9k in addition to your $1k deposit to open the $10k position.
+- If the price of $SOL goes up by 10%:
+    - your position of $10k becomes $11k profiting you $1k.
+    - contrast this with a profit of $100 if you would have bought $1k worth of $SOL on the spot market.
+- But if the price of $SOL goes down by 10%:
+    - your position will go down from $10k to $9k netting you a loss of $1k!
+
+Leverage trading can potentially give you greater returns, but also comes with greater risk.
+
+<Image src="/content/mango/mango1.png" alt="Mango Markets" width={500} height={500} className="mx-auto" />
+
+## How did the hacker steal funds?
+This hack was not a technical hack but a case of market manipulation.
+
+High level of how the hack went underway:
+
+1. The hacker opened two accounts on Mango Protocol and deposited $5M of USDC in each.
+    - From Account A, the hacker took leverage and opened a short position to sell 483 million of Mango Perpetual contracts ($MNGO-PERP) at $0.038.
+    - Effectively, this position was worth $18.3 million, so the hacker took ~3.6x leverage on their $5M deposit.
+    - From Account B, the hacker bought all the 483 million contracts, effectively making this a long position.
+
+2. Then the hacker went and bought $4 million worth of $MNGO on three separate exchanges to spike $MNGO's price: 
+    - The spot price of $MGNO went from $0.038 to $0.91 (an increase of ~2294%!)
+
+3. This spike in price made the long position in Account B hugely profitable:
+
+    - The hacker had bought 483 million of $MNGO-PERP contracts at $0.038
+    - At the spiked price of $0.91, the position resulted in 483 million*(0.91 - 0.038) = ~$420M of unrealized profit.
+
+4. Mango allows you to also borrow against unrealized profit and loss:
+
+    - leveraging the unrealized pnl, the hacker went ahead and took out loans in multiple crypto assets totalling $115M!
+    - then simply withdrew these assets from Mango to their wallet.
+
+You can listen to a statement by Avraham [here](https://www.youtube.com/watch?v=e-y4WmrndQ4)
+
+<Image src="/content/mango/mango2.png" alt="Mango Markets" width={500} height={500} className="mx-auto" />
+
+Now that you have got a gist of how the hack went underway, let's go through the hack step by step.
+
+## Technical Details:
+
+Wallets involved in counter-trading:
+
+Wallet A: [CQvKSNnYtPTZfQRQ5jkHq8q2swJyRsdQLcFcj3EmKFfX](https://solscan.io/account/CQvKSNnYtPTZfQRQ5jkHq8q2swJyRsdQLcFcj3EmKFfX)
+
+Wallet B: [4ND8FVPjUGGjx9VuGFuJefDWpg3THb58c277hbVRnjNa](https://solscan.io/account/4ND8FVPjUGGjx9VuGFuJefDWpg3THb58c277hbVRnjNa)
+
+Step by step flow of how the hack went underway:
+1. Hacker deposits:
+    - $5M USDC in wallet A:
+    <Image src="/content/mango/mango3.png" alt="Mango Markets" width={500} height={500} className="mx-auto" />
+
+    - $5M USDC in wallet B:
+    <Image src="/content/mango/mango4.png" alt="Mango Markets" width={500} height={500} className="mx-auto" />
+
+2. Wallet A places an offer to sell 483 million Mango perpetual futures (MNGO-PERPs) at a price of $0.038
+    <Image src="/content/mango/mango5.png" alt="Mango Markets" width={500} height={500} className="mx-auto" />
+
+3. Wallet B buys all 483 million MNGO-PERP:
+    <Image src="/content/mango/mango6.png" alt="Mango Markets" width={500} height={500} className="mx-auto" />
+
+4. Hacker then manipulates price by spot buying on 3 exchanges:
+    - Bought $1.44M worth of $MNGO on Mango Markets:
+    <Image src="/content/mango/mango7.png" alt="Mango Markets" width={500} height={500} className="mx-auto" />
+
+    - Bought $1 million worth of $MNGO on AscendEX exchange:
+    <Image src="/content/mango/mango8.png" alt="Mango Markets" width={500} height={500} className="mx-auto" />
+
+    - Bought $1.6 million of $MNGO on FTX:
+    <Image src="/content/mango/mango9.png" alt="Mango Markets" width={500} height={500} className="mx-auto" />
+
+5. The huge spot buys above spiked the price of $MNGO to a peak of $0.91
+<Image src="/content/mango/mango10.png" alt="Mango Markets" width={500} height={500} className="mx-auto" />
+
+6. The position in Wallet B reaches an unrealized profit of ~$420 million. The hacker uses this position to borrow $115M worth of crypto assets from the protocol.
+<Image src="/content/mango/mango11.png" alt="Mango Markets" width={500} height={500} className="mx-auto" />
+
+<hr />
+
+Upon gaining a complete understanding of the hack, an intriguing question naturally emerges: how did the hacker orchestrate such a substantial manipulation of $MGNO's price?
+
+This was possible because of MNGO token&apos;s low circulating supply and trading volume.
+- Low liquidity means there is a limited number of buy and sell orders on any exchange.
+- This results in a thin order book, where small trades can lead to significant price movements.
+- Manipulators can take advantage of this by placing large buy or sell orders, which can cause the price to spike or crash, respectively.
+
+A community member reported this issue in March 2022, but sadly Mango market team didn't put in appropriate guardrails to prevent this exploit.
+<Image src="/content/mango/mango12.png" alt="Mango Markets" width={500} height={500} className="mx-auto" />
+
+## Aftermath of the Hack
+
+In a surprising twist of events, the hacker posted a proposal on Mango DAO:
+<Image src="/content/mango/mango13.png" alt="Mango Markets" width={500} height={500} className="mx-auto" />
+
+Overview of the hacker terms:
+
+- Out of the $115M hack, the hacker wants Mango to use their treasury of $70M.
+- The hacker proposes to send the remaining difference i.e ~$45M to Mango if Mango drops all investigation.
+    - This would make the user's whole and the protocol could restart from scratch.
+- Hacker keeps the rest of the exploited money as a bounty.
+
+The hacker doesn't stop here:
+- The heist money also included 32M MNGO tokens.
+    - Each MNGO token grants users voting rights to vote on the proposals posted on Mango DAO.
+- Using the stolen governance tokens, the hacker voted yes on the proposal! 😅
+- To everybody's relief, Mango community members were able to gather majority to vote against the proposal.
+
+<hr />
+
+Then Mango team counter-negotiated with another proposal:
+<Image src="/content/mango/mango14.png" alt="Mango Markets" width={500} height={500} className="mx-auto" />
+
+To put things to an end, the hacker accepted this proposal and returned $67M worth of crypto assets back to Mango. Whew!
+<Image src="/content/mango/mango15.png" alt="Mango Markets" width={500} height={500} className="mx-auto" />
+
+## Official Statement
+Mango tweeted out their statement [here](https://x.com/mangomarkets/status/1580053208130801664).
+
+They also clarified in a later tweet that exploit did not occur due to an oracle failure, but rather through genuine price manipulation.

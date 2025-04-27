@@ -1,0 +1,92 @@
+import Image from 'next/image';
+
+<Cover
+  src="/covers/dogwif.png"
+  alt="DogWifTools"
+  caption=""
+/>
+
+DogWifTools — the go-to tool for launching shady memecoins — got exploited, resulting in more than $10 million in stolen funds.
+In a perfect twist of irony, the very scammers who used it to run their schemes became the ones getting scammed.
+
+## Why would you use DogWif Tools?
+DogWifTools was a go-to toolkit for memecoin creators who wanted to launch scam tokens.
+It helped developers bundle tokens together, fake trading volume, and hide who really controlled the supply — all tricks used to convince regular traders that a token was legitimate.
+
+By using DogWifTools, scammers could quickly set up a token that looked active and trustworthy, making it easier to attract unsuspecting buyers before pulling the rug.
+
+But poor security practices by the developers left a major weakness: hackers managed to inject a Remote Access Trojan (RAT) into the tool, turning it against its own users.
+Anyone who downloaded recent versions of DogWifTools unknowingly installed a remote access trojan that stole private keys, exchange logins, and even ID photos from their devices.
+
+This breach affected versions 1.6.3 through 1.6.6 of the software, specifically targeting Windows users.
+
+<Image src="/content/dogwif/dogwif1.png" alt="DogWifTools" width={1000} height={1000} className="mx-auto"/>
+
+## How did the hacker steal funds?
+The hacker executed a supply chain attack against DogWifTools by first reverse engineering the software to retrieve a GitHub token. This token gave them unauthorized access to DogWifTools' private GitHub repository. Instead of immediately tampering, they patiently waited for the developers to publish new legitimate updates.
+
+Once updates were prepared, the hacker injected a Remote Access Trojan (RAT) into versions 1.6.3 to 1.6.6 of DogWifTools. These malware-infected builds were then distributed to users as if they were clean, trusted updates.
+
+When users installed these compromised versions, the following steps occurred:
+1. Silent Installation of Malware:
+The RAT quietly installed a secondary executable (updater.exe) into the Windows AppData folder, avoiding immediate detection.
+
+2. Background Scanning:
+The RAT began scanning the infected machines for sensitive information, including:
+
+Private keys stored locally.
+
+Crypto exchange login credentials (like Binance, Coinbase).
+
+ID photos and personal documents saved on the computer.
+
+3. Data Extraction:
+The malware sent the collected information to the attackers’ remote servers.
+
+4. Wallet Draining:
+Using the harvested private keys and exchange credentials, the attackers:
+  - Directly accessed and emptied crypto wallets.
+  - Logged into centralized exchanges (CEXes) like Coinbase and Binance.
+  - Executed unauthorized withdrawals to attacker-controlled addresses.
+
+5. Identity Abuse:
+With stolen ID photos and KYC documents, the attackers allegedly created new accounts on exchanges in victims' names, making it harder to trace stolen funds.
+
+6. Ongoing Surveillance:
+Even after the initial theft, infected systems remained compromised, allowing attackers to continue stealing from any new wallets or accounts created by victims.
+
+Along with the virus, the people who compromised DogWifTools left an angry note on infected machines:
+> Solana is a f*cking joke and a scam from the beginning, it was designed for criminals by criminals! As a result, we have confiscated all your crypto, because you deserved it! You people who use automated tools to run these scam tokens are fucking disgusting to us. It's about time you got fucked over for once. Solana is nothing more than a shitty platform that enables scammers and rug pullers to steal from innocent users.
+
+But the real masterpiece? The attackers didn’t just steal funds — they went full method actor.
+
+Using the harvested KYC documents stored on victims' computers, they allegedly created legitimate Binance accounts in the scammers' own names.
+
+Talk about identity theft with a side of irony.
+
+While the victims were busy crafting their next pump-and-dump scheme, their own wallets were being drained faster than a degen's leverage account in a bear market.
+
+In crypto's endless cycle of predation, is there anything more poetic than scammers downloading their own destruction?
+
+<Image src="/content/dogwif/dogwif2.png" alt="DogWifTools" width={1000} height={1000} className="mx-auto"/>
+## Potential Impact
+While chaos unfolded in crypto’s shadiest corners, one alleged perpetrator, [Jizzy Group](https://x.com/JizzyGroup), took a different route. No public announcements on Twitter or Discord — just a manifesto dropped on an [onion site](http://jizzyyypvrkys5b3hw6h7zfpnxm4jannjp4rb7kfgjtvy32urnrcjzqd.onion/), because Tor is where justice lives now.
+
+In total, around $10 million was stolen — not from innocent traders, but from would-be scammers relying on DogWifTools for their schemes.
+
+The fallout sparked wild speculation across the community. Some accused DogWifTools of being complicit in the attack, hinting at an inside job. However, no direct evidence supports these claims.
+
+DogWifTools has denied any involvement and promised to improve its security practices, though the damage and irony were already done.
+
+The hunters became prey, the ruggers got rugged, and somewhere in the dark web, someone's laughing all the way to a non-KYC'd exchange.
+
+In the end, was this justice served cold, or just another player proving there's always a bigger predator?
+
+## Statements and Credits
+- [Winging It Crypto](https://x.com/WingingItCrypto/status/1884290875599245783)
+- [The Bitcoin Express](https://x.com/The_BTC_Express/status/1884198664941494529)
+- [hen100x](https://x.com/henn100x/status/1884119701833523652)
+- [SC World](https://www.scworld.com/brief/dogwiftools-breached-in-supply-chain-attack-on-cryptocurrency-wallets)
+- [Tasties Shill](https://x.com/Tasties_Shill/status/1884645708814573971)
+- [Slorg](https://x.com/SlorgoftheSlugs/status/1884282361363456201)
+- [ZachXBT](https://x.com/zachxbt/status/1884290527228817413)
