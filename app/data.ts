@@ -304,6 +304,34 @@ export const BLOG_POSTS: BlogPost[] = [
   },
 ]
 
+export const TWITTER_HACKS = [
+  {
+    id: 1,
+    title: 'Twitter OAuth Compromised',
+    link: 'https://x.com/0xSarthak13/status/1816000000000000000',
+  },
+  {
+    id: 2,
+    title: 'Solana Twitter Account Phishing',
+    link: 'https://x.com/0xSarthak13/status/1816000000000000000',
+  },
+  {
+    id: 3,
+    title: 'Crypto Twitter Bot Attack',
+    link: 'https://x.com/0xSarthak13/status/1816000000000000000',
+  },
+  {
+    id: 4,
+    title: 'DEX Twitter Impersonation',
+    link: 'https://x.com/0xSarthak13/status/1816000000000000000',
+  },
+  {
+    id: 5,
+    title: 'Wallet Security Alert',
+    link: 'https://x.com/0xSarthak13/status/1816000000000000000',
+  }
+]
+
 export const SOCIAL_LINKS: SocialLink[] = [
   {
     label: 'Github',

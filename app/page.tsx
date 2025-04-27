@@ -1,8 +1,20 @@
 'use client'
 import { motion } from 'motion/react'
 import { Magnetic } from '@/components/ui/magnetic'
-import { EMAIL, SOCIAL_LINKS } from './data'
+import { EMAIL, SOCIAL_LINKS, BLOG_POSTS } from './data'
 import React from 'react'
+import { HackStats } from '@/components/stats-ui/hack-stats'
+import dynamic from 'next/dynamic'
+
+const AttackTypes = dynamic(() => import('@/components/stats-ui/attack-types').then(mod => mod.AttackTypes), { 
+  ssr: false,
+  loading: () => <div className="h-[500px] bg-zinc-900/50 rounded-lg animate-pulse" />
+})
+
+const TwitterHacks = dynamic(() => import('@/components/stats-ui/twt-hacks').then(mod => mod.TwitterHacks), { 
+  ssr: false,
+  loading: () => <div className="h-[500px] bg-zinc-900/50 rounded-lg animate-pulse" />
+})
 
 const VARIANTS_CONTAINER = {
   hidden: { opacity: 0 },
@@ -60,7 +72,7 @@ function MagneticSocialLink({
 export default function Home() {
   return (
     <motion.main
-      className="space-y-24"
+      className="space-y-16"
       variants={VARIANTS_CONTAINER}
       initial="hidden"
       animate="visible"
@@ -69,7 +81,24 @@ export default function Home() {
         variants={VARIANTS_SECTION}
         transition={TRANSITION_SECTION}
       >
-        // Dashboard Goes Here
+        <HackStats />
+      </motion.section>
+
+      <motion.section
+        variants={VARIANTS_SECTION}
+        transition={TRANSITION_SECTION}
+      >
+        <div className="grid grid-cols-1 gap-6">
+          <AttackTypes />
+        </div>
+      </motion.section>
+      <motion.section
+        variants={VARIANTS_SECTION}
+        transition={TRANSITION_SECTION}
+      >
+        <div className="grid grid-cols-1 gap-6">
+          <TwitterHacks />
+        </div>
       </motion.section>
 
       <motion.section
