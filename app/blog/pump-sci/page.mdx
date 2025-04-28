@@ -1,0 +1,54 @@
+import Image from 'next/image';
+
+<Cover
+  src="/covers/pump-sci.png"
+  alt="Pump Sci"
+  caption="pump.science"
+/>
+
+## Why would you use Pump Sci?
+
+Pump Science calls itself a “gamified longevity research platform.” The project, which is pushed by memecoin influencers who are trying to promote decentralized science as the next big thing, creates tokens based on various chemicals and claims to utilize data from real animal experiments.
+
+It says that it will explore human trials once the current animal trials are over. It also claims that token holders will be able to sell “intervention” rights to chemical suppliers and will possess the rights to “compound IP” and its development.
+
+It reportedly had its crypto wallet hijacked which was later used to create fraudulent tokens, after its private key was left public in the codebase.
+
+<Image src="/content/pump-sci/pump-sci1.png" alt="Pump Sci" width={1000} height={1000} className='mx-auto'/>
+
+## How did the hacker steal funds?
+A high-level overview of the strategy executed by the attacker:
+1. Pump Science developers mistakenly left a private key exposed in their GitHub codebase.
+2. The attacker found the exposed private key linked to wallet T5j2UB...jjb8sc.
+3. This wallet was still active and recognized by Pump.fun as the off-chain creator for official Pump Science tokens like URO and RIF.
+4. Using the leaked private key, the attacker:
+    - Hijacked the Pump Science account on Pump.fun.
+    - Issued counterfeit tokens pretending to be official Pump Science launches.
+5. Newcomers to Pump Science were tricked into buying these fake tokens.
+<Image src="/content/pump-sci/pump-sci2.png" alt="Pump Sci" width={1000} height={1000} className='mx-auto'/>
+
+## Technical Explanation:
+
+1. Pump Science developers mistakenly pushed code to GitHub containing the private key for wallet T5j2UB...jjb8sc.
+2. This wallet was previously used in production for the real token launches ($URO, $RIF).
+3. The attacker discovered the private key in the public repository.
+4. Using this key, they accessed Pump Science's Pump.fun account.
+5. They started launching fake tokens using the compromised profile.
+6. As the Pump.fun system linked tokens based on wallet activity, users believed these tokens were legitimate.
+7. The attacker exploited the trust established around the Pump Science name to lure buyers.
+
+## What was the damage?
+- Wallet Address Affected: T5j2UBTvLYPCwDP5MVkSALN7fwuLFDL9jUXJNjjb8sc
+- Tokens Compromised: Fake tokens like "Urolithin B to E (URO)", "Cocaine (COKE)", and others.
+- Impact on Reputation: Severe user trust erosion.
+- User Funds: Potential losses from fraudulent token purchases.
+- Pump Science Actions:
+    - Paused all new token launches.
+    - Partnered with Blockaid for real-time monitoring.
+
+<Image src="/content/pump-sci/pump-sci3.png" alt="Pump Sci" width={1000} height={1000} className='mx-auto'/>
+
+## Wallet Addresses and Official Links
+- Compromised Wallet Address: [T5j2UBTvLYPCwDP5MVkSALN7fwuLFDL9jUXJNjjb8sc](https://solscan.io/account/T5j2UBTvLYPCwDP5MVkSALN7fwuLFDL9jUXJNjjb8sc)
+- Pump.fun Attacker Profile:Renamed to "dont_trust" on Pump.fun
+- [Official Pump Science Statement](https://x.com/pumpdotscience/status/1861590619363107096)

@@ -1,0 +1,2 @@
+- add twitter hacks
+- complete blogs
