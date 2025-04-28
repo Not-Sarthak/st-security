@@ -1,0 +1,82 @@
+import Image from 'next/image';
+
+<Cover
+  src="/covers/solareum.png"
+  alt="Solareum"
+  caption=""
+/>
+
+Solareum, a Telegram-based crypto trading bot built on the Solana blockchain, [permanently shut down](https://x.com/SolareumProject/status/1773744784387064265) following a $1 million exploit and ongoing financial instability.
+
+The breach exposed deep-rooted vulnerabilities in the bot&apos;s infrastructure, ultimately leading to stolen user funds, frozen assets, and the platform&apos;s abrupt closure. A subsequent investigation revealed the involvement of a North Korean IT worker hired by the Solareum team — a major operational and security oversight.
+
+## Why would you use Solareum?
+
+Solareum offered a simple, fast, and accessible way to trade Solana (SOL) tokens directly through Telegram. It targeted non-technical users by removing the complexity of traditional trading interfaces.
+Key advantages:
+- No need for external wallets or dApps
+- Fast execution of trades
+- Simple interface through a widely-used messaging platform (Telegram)
+However, ease of use came at the cost of poor security practices.
+
+<Image src="/content/solareum/solareum1.png" alt="Solareum" width={500} height={500} className="mx-auto" />
+
+## How did the Breach Unfold?
+- March 29, 2024: Hundreds of users reported sudden losses from their wallets on Telegram and X (Twitter).
+- User reports included:
+    - “All of my SOL and tokens hacked.”
+    - “Wallet is drained.”
+    - “How do I get a refund?”
+- One user claimed to have lost $30,000, another over $200,000. In total, 6,045 SOL were stolen, worth approximately $1.4 million.
+- Solareum initially suggested a system exploit but later clarified there was an external factor involved.
+- January 2025: A U.S. Department of Justice (DOJ) filing revealed the likely cause — a North Korean developer had infiltrated the team and inserted malicious code into the platform.
+
+<Image src="/content/solareum/solareum2.png" alt="Solareum" width={500} height={500} className="mx-auto" />
+
+## How did the hacker steal funds?
+### Attack Timeline
+- March 29, 2024: Users began reporting missing funds on Solareum’s Telegram support channel and across social media platforms. Reports showed drained SOL balances and unauthorized transactions being executed from user wallets.
+- March 30, 2024: After coordinated efforts from the security community, including researchers like Taylor Monahan, Tether was contacted to freeze the USDT linked to laundering routes. Tether successfully froze a large portion of the funds.
+- May 2024: The FBI announced the seizure of approximately $950,000 USDT. The funds had been partially moved through centralized exchanges before being frozen.
+
+### Method of Attack
+1. Malicious Code Injection by Internal Developer
+    - A new developer hired in December 2023 embedded malicious code into the Solareum bot backend.
+    - This code allowed backend access to user wallet authorization logic.
+    - The code may have intercepted wallet seed phrases or private keys, or manipulated signing prompts.
+
+2. Telegram-Based Bot Exploitation
+    - Solareum executed trades using Telegram as the interface.
+    - The attack leveraged Telegram messages to prompt transactions or bypassed the need for user confirmation entirely.
+    - Users may have unknowingly interacted with malicious command flows, enabling unauthorized withdrawals.
+
+3. Wallet Drain
+    - Draining targeted only SOL tokens, not SPL (Solana Program Library) tokens.
+    - ~2,808 SOL were confirmed stolen initially, with further tracking estimating total losses to exceed 6,000 SOL from more than 300 users.
+
+4. Laundering Path
+    - The attacker converted SOL into USDT (Tether).
+    - The USDT was then moved across multiple crypto exchanges to obfuscate the origin:
+        - Binance
+        - MEXC
+        - HTX
+        - EasyBit
+        - FixedFloat
+
+5. On-Chain Pattern Matching
+    - Security researchers observed transaction behavior consistent with prior DPRK-attributed attacks.
+
+6. Tether Freeze & FBI Seizure
+    - After Monahan and others provided enough trace data, Tether froze the wallets holding USDT.
+    - The FBI then moved in to seize ~$950,000 USDT, recovering a major portion of the stolen funds
+
+## What was the Impact?
+- 302 wallets drained; 2,808 SOL lost (~$520,000).
+- Additional 3,200+ SOL stolen across related accounts.
+- Victims unable to recover assets unless exchanges cooperated.
+- Solareum ceased operations within 24 hours of the exploit.
+<Image src="/content/solareum/solareum3.png" alt="Solareum" width={500} height={500} className="mx-auto" />
+
+## Official References and Links:
+- [Solareum X Announcement](https://x.com/SolareumProject/status/1773744784387064265)
+- [DL News Article](https://www.dlnews.com/articles/regulation/how-a-dprk-developer-tricked-solareum-and-stole-14m/)

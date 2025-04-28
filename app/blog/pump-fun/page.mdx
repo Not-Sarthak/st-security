@@ -1,0 +1,91 @@
+import Image from 'next/image';
+
+<Cover
+  src="/covers/pump-fun.png"
+  alt="Pump.fun"
+  caption="pump.fun"
+/>
+
+Pump.fun, a Solana-based meme token launch platform, was exploited on May 15, 2024, when a former employee used their privileged access and a flash loan attack to drain ~$1.9 million (~12.3K SOL) from the bonding curve liquidity pools.
+
+## Why would you use Pump.fun?
+Pump.fun is a platform that allows users to easily create, launch, and trade Solana-based meme tokens using bonding curves. These curves automatically adjust the token price as users buy or sell.
+Users can:
+- Create tokens instantly
+- Buy low, sell high as token demand increases
+- Trade directly within the platform through smart contracts
+
+The simplicity and hype around meme coins made it a hotspot for rapid speculation and growth.
+
+<Image src="/content/pump-fun/pump-fun1.png" alt="Pump.fun" width={500} height={500} className="mx-auto" />
+
+A good blog post explaining the mechanics of Pump.fun is [here](https://medium.com/@buildwithbhavya/the-math-behind-pump-fun-b58fdb30ed77).
+
+Before understanding how the hack worked, you first need to understand what flash loans are.
+
+## What are Flash Loans?
+
+A flash loan is an uncollateralized loan that allows someone to borrow large amounts of cryptocurrency for the duration of a single transaction — but it must be repaid before the transaction ends. If not, the transaction is automatically canceled and reverted.
+
+This feature is unique to blockchain environments that support atomic transactions, like Ethereum and Solana.
+
+Example:
+1. Borrow 10,000 SOL via a flash loan.
+2. Use it to exploit a vulnerable protocol or gain arbitrage profits.
+3. Repay the 10,000 SOL within the same block.
+4. If anything fails — the entire transaction gets reverted, and it's like it never happened.
+
+## How did the Hacker Steal Funds?
+A high-level overview of the strategy executed by the attacker:
+1. Used internal access to control the withdrawal authority.
+2. Borrowed SOL via a flash loan.
+3. Used that SOL to buy as many coins as possible to push them to 100% bonding curve completion.
+4. Drained the bonding curve liquidity upon reaching 100%.
+5. Repaid the flash loan and walked away with profits.
+
+Let us walk you through an example of how this worked:
+- The attacker took a flash loan to borrow a large amount of SOL.
+- They used the SOL to aggressively buy newly launched tokens on Pump.fun.
+- Once tokens reached 100% bonding curve completion, the smart contracts allowed liquidity withdrawal.
+- The attacker instantly withdrew the liquidity (mostly SOL).
+- Used part of the stolen funds to repay the flash loan.
+- Retained the rest as profit.
+
+<Image src="/content/pump-fun/pump-fun2.png" alt="Pump.fun" width={500} height={500} className="mx-auto" />
+
+## Technical Concepts:
+To understand how the exploit happened, we must review some foundational elements:
+1. Pump.fun: The main protocol, which uses bonding curves for token pricing.
+2. Flash Loans: Loans that require no collateral if repaid in a single transaction.
+3. Bonding Curve Liquidity: When 100% of tokens are bought, the liquidity pool becomes withdrawable.
+4. Privileged Access: The attacker used previously granted access (withdraw authority) to enable fund transfers.
+
+## Technical Explanation:
+1. At 15:21 UTC, the attacker began initiating flash loans and using previously held withdraw permissions.
+2. They targeted coins that were nearing 100% bonding curve status.
+3. For each coin:
+    - Borrowed SOL via a flash loan.
+    - Bought the token rapidly using the SOL to drive it to 100%.
+    - Used withdraw authority to drain the SOL from the bonding curve contract.
+    - Repaid the flash loan within the same transaction.
+4. This process was repeated across multiple tokens between 15:21–17:00 UTC.
+
+## What was the damage?
+- ~12.3K SOL stolen (worth ~$1.9 million).
+- ~20–30 coins affected (exact number may vary).
+- Out of ~$45 million in bonded liquidity, only ~$1.9M affected.
+
+
+## Pump.fun Response and Mitigation
+- Trading Paused at 17:00 UTC.
+- New Contracts Deployed – Platform was restarted with new secure contracts.
+- 0% Trading Fees for 7 days post-relaunch.
+- Token Recovery Plan:
+    - Affected tokens (those that reached 100% between 15:21–17:00 UTC) will be re-launched on Raydium.
+    - Each token will be seeded with equal or more SOL liquidity.
+
+## Wallet Addresses and Official Links
+- [Attacker Wallet Address](https://solscan.io/address/5PXxuZkvftsg5CAGjv5LL5tEtvBRskdx1AAjxw8hK2Qx)
+- [Smart Contract ID Used](https://solscan.io/address/MFv2hWf31Z9kbCa1snEPYctwafyhdvnV7FZnsebVacA)
+- [Pump.fun Official Statement on X (Twitter)](https://x.com/pumpdotfun/status/1790777984470143397)
+- [Data Source](https://flipsidecrypto.xyz/home/)
