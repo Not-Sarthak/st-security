@@ -175,7 +175,7 @@ export function HackStats() {
     <Card className='@container/card bg-white dark:bg-zinc-900 dark:border-zinc-800 shadow-sm'>
       <CardHeader className='flex items-center justify-between border-b dark:border-zinc-800 px-6 py-4 sm:flex-row'>
         <div>
-          <CardTitle className="text-lg font-medium tracking-tight text-zinc-900 dark:text-white">Security Incidents</CardTitle>
+          <CardTitle className="text-lg font-medium tracking-tight text-zinc-900 dark:text-white">Security Incidents & Scams</CardTitle>
         </div>
         <div className='flex gap-2 mt-2 sm:mt-0 bg-zinc-100 dark:bg-zinc-800 p-1 rounded-full'>
           {chartKeys.map(
@@ -204,7 +204,7 @@ export function HackStats() {
       
       <div className="px-6 pt-6 flex justify-between items-baseline">
         <CardDescription className="text-sm font-normal text-zinc-500 dark:text-zinc-400">
-          {activeChart === 'incidents' ? 'Total incidents' : 'Total value lost'}
+          {activeChart === 'incidents' ? 'Total Incidents' : 'Total Value Lost'}
         </CardDescription>
         <div className="text-3xl font-bold tracking-tight text-zinc-900 dark:text-white tabular-nums">
           {activeChart === 'incidents'
