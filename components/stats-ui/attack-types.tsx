@@ -203,6 +203,33 @@ export function AttackTypes() {
                 cy="50%"
                 outerRadius={120}
                 stroke="none"
+                label={({
+                  cx,
+                  cy,
+                  midAngle,
+                  innerRadius,
+                  outerRadius,
+                  percent,
+                  value
+                }: any) => {
+                  const RADIAN = Math.PI / 180;
+                  const radius = 25 + innerRadius + (outerRadius - innerRadius);
+                  const x = cx + radius * Math.cos(-midAngle * RADIAN);
+                  const y = cy + radius * Math.sin(-midAngle * RADIAN);
+                  
+                  return (
+                    <text
+                      x={x}
+                      y={y}
+                      fill="#888"
+                      textAnchor={x > cx ? 'start' : 'end'}
+                      dominantBaseline="central"
+                      className="text-xs font-medium fill-zinc-600 dark:fill-zinc-400"
+                    >
+                      {value}
+                    </text>
+                  );
+                }}
               >
                 {attackData.map((entry, index) => (
                   <Cell 
