@@ -15,6 +15,74 @@ type SocialLink = {
   link: string
 }
 
+type ProtocolFailure = {
+  id: string
+  title: string
+  date: string
+  duration: string
+  description: string
+  details: string
+}
+
+export const PROTOCOL_FAILURES: ProtocolFailure[] = [
+  {
+    id: "turbine-block-propagation",
+    title: "Turbine Block Propagation Failure",
+    date: "December 2020",
+    duration: "~6 hours",
+    description: "Vulnerability in the Turbine protocol caused by duplicate block broadcasts leading to network desynchronization.",
+    details: "Solana's first major disruption stemmed from a vulnerability in the Turbine protocol, responsible for block propagation across validators. The incident occurred when a validator mistakenly ran two identical nodes, resulting in duplicate block broadcasts. Due to a flaw in how Turbine tracked blocks — by position rather than by hash — validators were unable to distinguish between legitimate and duplicate blocks. The resulting desynchronization brought the network to a complete halt for approximately six hours. This early outage revealed foundational weaknesses in Solana's propagation mechanism."
+  },
+  {
+    id: "bot-driven-transaction-flood",
+    title: "Bot-Driven Transaction Flood",
+    date: "September 2021",
+    duration: "~17 hours",
+    description: "Memory overflows from aggressive bot traffic during a token launch led to consensus failure.",
+    details: "An aggressive influx of bot-generated traffic during a token launch overwhelmed Solana's transaction processing pipeline. The flood of transactions caused memory overflows on validator nodes, leading to consensus failure and a 17-hour network outage. A coordinated validator restart was required. This event exposed the network's limited spam mitigation measures and emphasized the need for robust rate-limiting strategies."
+  },
+  {
+    id: "transaction-spam-overload",
+    title: "Transaction Spam Overload",
+    date: "April 2022",
+    duration: "~8 hours",
+    description: "NFT mint triggered 6M+ TPS load, overwhelming validators and causing a halt in block production.",
+    details: "A highly anticipated NFT mint triggered a bot surge that pushed the network to a peak of over 6 million transactions per second. Validators were unable to keep up with the load, leading to a complete halt of block production for roughly eight hours. Although previous improvements had been made to handle spam, a voting transaction issue prevented effective recovery. A full restart was again necessary. This incident further illustrated the systemic risk posed by unbounded throughput under adversarial conditions."
+  },
+  {
+    id: "durable-nonce-consensus-breakdown",
+    title: "Durable Nonce Consensus Breakdown",
+    date: "June 2022",
+    duration: "~4.5 hours",
+    description: "Bug in the 'durable nonce' feature caused validators to diverge due to inconsistent nonce logic handling.",
+    details: "A bug in the \"durable nonce\" transaction feature — used for enabling pre-signed transactions — caused validators to diverge in state due to inconsistencies in how different versions of the software handled nonce logic. This consensus failure led to a ~4.5-hour outage and required temporary deactivation of the feature. A fix was scheduled for a later software release. The event revealed the potential fragility introduced by mismatched node implementations and evolving feature sets."
+  },
+  {
+    id: "fork-choice-rule-disruption",
+    title: "Fork Choice Rule Disruption",
+    date: "September 2022",
+    duration: "~8.5 hours",
+    description: "Bug in fork choice algorithm created inconsistent chain views among validators.",
+    details: "A subtle bug in the fork choice algorithm created inconsistent views of the canonical chain among validators. One validator broadcasting duplicate blocks triggered diverging forks, which the rest of the network was unable to reconcile. The resulting instability persisted for approximately 8.5 hours, requiring a validator upgrade to reestablish consensus. This incident emphasized the criticality of rigorous fork choice logic in high-throughput consensus systems."
+  },
+  {
+    id: "turbine-large-block-overload",
+    title: "Turbine Large Block Overload",
+    date: "February 2023",
+    duration: "~19 hours",
+    description: "Unusually large block overwhelmed Turbine protocol's propagation capacity, causing processing loops.",
+    details: "A block of unusually large size overwhelmed the Turbine protocol's capacity to propagate data across the network. This resulted in a cascading failure where validators entered a processing loop and were unable to progress. The network remained offline for ~19 hours until patched versions (v1.13.7 and v1.14.17) were deployed to improve duplicate data handling. Once again, Turbine's design limitations under high-stress scenarios were brought to the forefront."
+  },
+  {
+    id: "jit-cache-recompile-loop-crash",
+    title: "JIT Cache Recompile Loop Crash",
+    date: "February 2024",
+    duration: "~5 hours",
+    description: "Flaw in JIT cache mechanism caused infinite recompilation loops, leading to validator crashes.",
+    details: "A flaw in the Just-In-Time (JIT) cache mechanism used for program execution caused validators to repeatedly recompile the same contract. This infinite recompilation loop led to validator crashes and a ~5-hour outage. A patch was issued to enhance caching efficiency and prevent redundant execution cycles. This event underscored the importance of runtime stability in environments optimized for rapid execution."
+  }
+]
+
 export const BLOG_POSTS: BlogPost[] = [
   {
     title: "LoopScale",
@@ -252,29 +320,34 @@ export const BLOG_POSTS: BlogPost[] = [
 export const TWITTER_HACKS = [
   {
     id: 1,
-    title: 'Twitter OAuth Compromised',
-    link: 'https://x.com/0xSarthak13/status/1816000000000000000',
+    title: 'DAWN',
+    link: 'https://x.com/realScamSniffer/status/1879390837496537466',
   },
   {
     id: 2,
-    title: 'Solana Twitter Account Phishing',
-    link: 'https://x.com/0xSarthak13/status/1816000000000000000',
+    title: 'HoloWorld AI',
+    link: 'https://x.com/HoloworldAI/status/1877763633796768224',
   },
   {
     id: 3,
-    title: 'Crypto Twitter Bot Attack',
-    link: 'https://x.com/0xSarthak13/status/1816000000000000000',
+    title: 'DogWif Coin',
+    link: 'https://dailycoin.com/solana-dogwifhat-wif-hacked-on-x-shills-random-meme-coins/',
   },
   {
     id: 4,
-    title: 'DEX Twitter Impersonation',
-    link: 'https://x.com/0xSarthak13/status/1816000000000000000',
+    title: 'IO.Net',
+    link: 'https://x.com/shadid_io/status/1829024547900924118',
   },
   {
     id: 5,
-    title: 'Wallet Security Alert',
-    link: 'https://x.com/0xSarthak13/status/1816000000000000000',
-  }
+    title: 'BorpaToken',
+    link: 'https://x.com/Entanglefi/status/1807329476130312652',
+  },
+  {
+    id: 6,
+    title: 'Saber DAO',
+    link: 'https://x.com/thesaberdao/status/1698550070206251303',
+  },
 ]
 
 export const SOCIAL_LINKS: SocialLink[] = [

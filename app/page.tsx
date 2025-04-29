@@ -6,15 +6,40 @@ import React from 'react'
 import { HackStats } from '@/components/stats-ui/hack-stats'
 import dynamic from 'next/dynamic'
 
-const AttackTypes = dynamic(() => import('@/components/stats-ui/attack-types').then(mod => mod.AttackTypes), { 
-  ssr: false,
-  loading: () => <div className="h-[500px] bg-zinc-900/50 rounded-lg animate-pulse" />
-})
+const AttackTypes = dynamic(
+  () =>
+    import('@/components/stats-ui/attack-types').then((mod) => mod.AttackTypes),
+  {
+    ssr: false,
+    loading: () => (
+      <div className="h-[500px] animate-pulse rounded-lg bg-zinc-900/50" />
+    ),
+  },
+)
 
-const TwitterHacks = dynamic(() => import('@/components/stats-ui/twt-hacks').then(mod => mod.TwitterHacks), { 
-  ssr: false,
-  loading: () => <div className="h-[500px] bg-zinc-900/50 rounded-lg animate-pulse" />
-})
+const TwitterHacks = dynamic(
+  () =>
+    import('@/components/stats-ui/twt-hacks').then((mod) => mod.TwitterHacks),
+  {
+    ssr: false,
+    loading: () => (
+      <div className="h-[500px] animate-pulse rounded-lg bg-zinc-900/50" />
+    ),
+  },
+)
+
+const ProtocolFailures = dynamic(
+  () =>
+    import('@/components/stats-ui/protocol-failures').then(
+      (mod) => mod.ProtocolFailures,
+    ),
+  {
+    ssr: false,
+    loading: () => (
+      <div className="h-[500px] animate-pulse rounded-lg bg-zinc-900/50" />
+    ),
+  },
+)
 
 const VARIANTS_CONTAINER = {
   hidden: { opacity: 0 },
@@ -92,12 +117,22 @@ export default function Home() {
           <AttackTypes />
         </div>
       </motion.section>
+
       <motion.section
         variants={VARIANTS_SECTION}
         transition={TRANSITION_SECTION}
       >
         <div className="grid grid-cols-1 gap-6">
           <TwitterHacks />
+        </div>
+      </motion.section>
+
+      <motion.section
+        variants={VARIANTS_SECTION}
+        transition={TRANSITION_SECTION}
+      >
+        <div className="grid grid-cols-1 gap-6">
+          <ProtocolFailures />
         </div>
       </motion.section>
 
