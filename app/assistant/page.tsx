@@ -6,7 +6,6 @@ import { IconSend, IconRefresh } from '@tabler/icons-react'
 import { cn } from '@/app/lib/utils'
 import { BLOG_POSTS } from '@/app/data'
 import { ChatBubble } from '@/components/ui/chat-bubble'
-import { TypingIndicator } from '@/components/ui/typing-indicator'
 
 type Message = {
   role: 'user' | 'assistant'
@@ -29,12 +28,6 @@ export default function AssistantPage() {
   
   const messagesEndRef = useRef<HTMLDivElement>(null)
   const inputRef = useRef<HTMLTextAreaElement>(null)
-  const router = useRouter()
-
-  // Auto-scroll to bottom on new messages or streaming updates
-  useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
-  }, [messages, streamingContent])
 
   // Auto-resize textarea
   useEffect(() => {
@@ -77,8 +70,6 @@ export default function AssistantPage() {
     setStreamingContent('')
 
     try {
-      // Simulating streaming in this example
-      // In a real implementation, you would use a streaming API endpoint
       const mockStream = async () => {
         const response = await fetch('/api/chat', {
           method: 'POST',
@@ -101,7 +92,6 @@ export default function AssistantPage() {
         const data = await response.json()
         const fullContent = data.content
         
-        // Simulate streaming by adding characters gradually
         let currentContent = ''
         const words = fullContent.split(' ')
         
@@ -109,11 +99,9 @@ export default function AssistantPage() {
           currentContent += (i > 0 ? ' ' : '') + words[i]
           setStreamingContent(currentContent)
           
-          // Wait for a short random delay to simulate natural typing
-          await new Promise(resolve => setTimeout(resolve, Math.random() * 30 + 10))
+            await new Promise(resolve => setTimeout(resolve, Math.random() * 30 + 10))
         }
         
-        // Update the final message when streaming is done
         setMessages(prev => prev.map((msg, idx) => 
           idx === prev.length - 1 ? { ...msg, content: fullContent, isStreaming: false } : msg
         ))
