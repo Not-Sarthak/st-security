@@ -1,6 +1,6 @@
 import Image from 'next/image';
 
-On [April 27th, 2025](https://x.com/LoopscaleLabs/status/1916183179469246626) 11:30AM EST, LoopScale was the victim of a nearly $5.8 million exploit.
+On [April 27th, 2025](https://x.com/LoopscaleLabs/status/1916183179469246626) 11:30AM EST, LoopScale was the victim of a **nearly $5.8 million exploit**.
 
 <Cover
   src="/covers/loopscale.png"
@@ -22,13 +22,13 @@ Loopscale unlocks new onchain financial products and credit applications, includ
 
 In simple words, Imagine you have $10 in USDC, and you want to borrow $5. Instead of just giving your $10 to someone to borrow $5, you both write down on a piece of paper what you want.
 
-You might say, "I'll give you $10 if you lend me $5." Someone else who has $5 and wants to lend it will see your offer and say, "Okay, I’ll lend you $5," and the trade happens directly between you two.
+You might say, "I'll give you $10 if you lend me $5." Someone else who has $5 and wants to lend it will see your offer and say, "Okay, I'll lend you $5," and the trade happens directly between you two.
 
 So, Loopscale is like the piece of paper where you and others can write down how much you want to borrow or lend in USDC, and it helps match you with the right person for a fair trade!
 
 Advantages of Loopscale:
-- Diverse collateral: Use existing DeFi positions (Met, Orca LPs, Natively staked SOL, LSTs, LRTs) as collateral.
-- Custom LTVs per asset, rewarding higher-quality collateral with better terms & categories, in general, to choose from.
+- **Diverse collateral**: Use existing DeFi positions (Met, Orca LPs, Natively staked SOL, LSTs, LRTs) as collateral.
+- **Custom LTVs** per asset, rewarding higher-quality collateral with better terms & categories, in general, to choose from.
 - Lend/borrow any token as long as there is a market.
 
 Limitations of Loopscale:
@@ -38,11 +38,11 @@ Limitations of Loopscale:
 
 > To understand the hack at a greater depth, we first need to run you through some essential concepts that will be leveraged inside the explanation.
 
-1. Atomic Markets: Loopscale introduces a novel market structure known as Atomic Markets. In this system, each market is defined by specific terms, collateral types, and rates. Lenders set rates per-collateral and per-principal, eliminating the spread between lending and borrowing rates found in traditional pool-based models. This approach allows for more efficient capital utilization and better risk management.
-2. Limit Creditbook (LCB): The Limit Creditbook is a flexible marketplace where loan offers and requests are listed. Borrowers and lenders can place orders specifying loan parameters such as amount, duration, interest rate, and collateral requirements. Once a matching counterparty accepts the offer, a bilateral loan is initiated, and funds are transferred between the parties
-3. Virtual Markets: To address liquidity fragmentation, Loopscale utilizes Virtual Markets. These are predefined loan terms that unify liquidity, minimizing fragmentation. Virtual Markets concentrate liquidity around standardized, popular configurations and support incremental refinement over time, enabling more granular markets as overall liquidity increases. ​
-4. Lockboxes: Lockboxes are programmatically controlled accounts where collateral is escrowed for the duration of the loan. Unlike traditional DeFi platforms, where collateral is pooled and often lent out, Lockboxes ensure that collateral remains segregated and non-transferable, reducing risks such as liquidity mismatches and rehypothecation. ​
-5. Optimized Yield: To address the challenge of unutilized capital waiting to be matched on the order book, Loopscale implements Optimized Yield. This feature automatically routes any unutilized liquidity to integrated pool lending protocols, ensuring lenders earn competitive yields until their orders are filled.
+1. **Atomic Markets**: Loopscale introduces a novel market structure known as Atomic Markets. In this system, each market is defined by specific terms, collateral types, and rates. Lenders set rates per-collateral and per-principal, eliminating the spread between lending and borrowing rates found in traditional pool-based models. This approach allows for more efficient capital utilization and better risk management.
+2. **Limit Creditbook (LCB)**: The Limit Creditbook is a flexible marketplace where loan offers and requests are listed. Borrowers and lenders can place orders specifying loan parameters such as amount, duration, interest rate, and collateral requirements. Once a matching counterparty accepts the offer, a bilateral loan is initiated, and funds are transferred between the parties
+3. **Virtual Markets**: To address liquidity fragmentation, Loopscale utilizes Virtual Markets. These are predefined loan terms that unify liquidity, minimizing fragmentation. Virtual Markets concentrate liquidity around standardized, popular configurations and support incremental refinement over time, enabling more granular markets as overall liquidity increases. ​
+4. **Lockboxes**: Lockboxes are programmatically controlled accounts where collateral is escrowed for the duration of the loan. Unlike traditional DeFi platforms, where collateral is pooled and often lent out, Lockboxes ensure that collateral remains segregated and non-transferable, reducing risks such as liquidity mismatches and rehypothecation. ​
+5. **Optimized Yield**: To address the challenge of unutilized capital waiting to be matched on the order book, Loopscale implements Optimized Yield. This feature automatically routes any unutilized liquidity to integrated pool lending protocols, ensuring lenders earn competitive yields until their orders are filled.
 
 Pool Based Narrative v/s Order Book Based Narrative:
 - Problem with Pool Based Narrative:
@@ -58,8 +58,8 @@ Pool Based Narrative v/s Order Book Based Narrative:
 
 Features offered by Loopscale:
 - Lending Options on Loopscale: 
-    - Lend (Advanced): Control rates, duration, and collateral. Withdraw unused liquidity anytime or trade active loans with accrued interest to reclaim capital.
-    - Vaults - Passive lending yield strategy that doesn't require active management.
+    - **Lend (Advanced)**: Control rates, duration, and collateral. Withdraw unused liquidity anytime or trade active loans with accrued interest to reclaim capital.
+    - **Vaults** - Passive lending yield strategy that doesn't require active management.
 <Image src="/content/loopscale/loopscale2.png" alt="LoopScale" width={500} height={500} className="mx-auto" />
 
 - Borrowing Options on Loopscale:
@@ -70,3 +70,100 @@ Features offered by Loopscale:
 - Loop: Leverage on Loopscale:
 Loop, like Multiply, leverages yield-bearing assets (e.g., JLP, LSTs) via no-collateral flash loans and fixed-rate loans. Positions can be market-neutral (stablecoins, staked assets) or directional (long/short volatile assets).
 <Image src="/content/loopscale/loopscale4.png" alt="LoopScale" width={500} height={500} className="mx-auto" />
+
+DeFi protocol Loopscale has recovered nearly half of the funds stolen during a major exploit over the weekend, as white hat negotiations with the attacker show signs of progress.
+
+In an April 29 update posted to X, Loopscale confirmed that approximately **19,463 Wrapped SOL (WSOL) (worth roughly $2.88 million)** have been returned to its wallets since April 28.
+
+The first two returns included 10,000 WSOL (~$1.48 million) and 4,463 WSOL (~$660,000), following an earlier recovery of 5,000 WSOL (~$740,000).
+
+"Our pursuit of an amicable resolution regarding Saturday's incident continues to make progress," the team wrote.
+
+On April 27, Loopscale's team said it had sent an onchain message to the exploiter, offering them a 10% bounty and a full release of liability in exchange for the return of 90% of the stolen funds.
+
+The team warned that if no agreement were reached within 24 hours, it would contact law enforcement.
+
+At 3:52 pm Eastern Time on April 28, Loopscale announced it had received a response from the exploiter, who indicated willingness to negotiate a return in exchange for a bounty.
+
+The exploit occurred on April 26, when manipulation of Loopscale's RateX PT token pricing functions led to the theft of approximately $5.7 million in USDC 
+USDC
+$0.9998
+ and 1,200 Solana 
+SOL
+$148.94
+ from its USDC and SOL vaults.
+
+The stolen amount represented about **12% of the platform's total funds** and impacted only vault depositors, not borrowers or loopers.
+
+While recoveries are not very common in decentralized finance, there have been more instances of successful fund returns as of late.
+
+Loopscale Labs had one tough weekend.
+
+Bad actors on Saturday [exploited](https://x.com/LoopscaleLabs/status/1916183179469246626) Loopscale's pricing functions to make loan collateral seem worth more than it really was, resulting in the theft of approximately $5.7 million in USDC and 1,200 SOL (or around 12% of the platform's total assets.)
+
+It's obviously not ideal to suffer an exploit just two weeks after [launching](https://blockworks.co/news/solana-defi-protocol-launches-efficiency), but this isn't your typical "DeFi protocol caught with its pants down" moment. On the contrary, many DeFi folks have rallied behind Loopscale's response to the exploit, [applauding](https://x.com/teethrichards/status/1916490751677972651) the team's speed, professionalism and commitment to user recovery. 
+
+Loopscale USDC and SOL vault depositors do face losses, though early signs seem to point to a partial or even full recovery. 
+
+For those unfamiliar, Loopscale's story 'til now unfolds thusly.
+Loopscale is a decentralized finance (DeFi) project that automates recursive leverage to make yield farming more efficient. Loopscale's bread and butter is **"looping"** — repeatedly borrowing and redepositing assets to amp up yield and capital efficiency. They weren't the first team to try to morph this premise into a mainstream financial primitive, but they have quickly become one of the most compelling. Honestly, it's pretty neat work.
+
+While the looping process has historically been dangerous, Loopscale's system offered automation, liquidation protection features, and a user experience that abstracted away many of those perceived risks. Loopscale's vaults, known for their attractive yields and tokenized market integrations, became a favorite among farmers looking for structured, lower-friction leverage. 
+
+Founded by a small but technically-strong team — including Mary Gooneratne and a handful of early RateX contributors — Loopscale built a reputation as one of the more serious players among Solana's DeFi cohort.
+
+At the core of Loopscale's recent growth was its adoption of **RateX's Principal Token (PT) markets**. Simply put, Principal Tokens are created by splitting a yield-bearing asset into two components — principal and yield — allowing users to trade, hedge, or lock in fixed returns more flexibly. In Loopscale's case, PT tokens were used as collateral in the vaults on the assumption that their pricing would remain tightly aligned to predictable discounting curves.
+
+But then, on April 26, that predictable curve broke.
+
+According to Loopscale, a person with malicious intent manipulated how its vault system priced the RateX PT tokens, making the tokens seem worth more than they were. As a result, the attacker was able to take out a series of loans that were not fully backed by collateral, managing to withdraw $5.7 million USDC and 1,200 SOL from Loopscale's vaults.
+
+The vulnerability was not in RateX itself, as Loopscale has emphasized. The issue was in how Loopscale's [contracts](https://x.com/LoopscaleLabs/status/1916460302704509372) priced the RateX tokens.
+
+RateX founder Sean Hu explained, *"Based on our investigation, the Loopscale incident has been confirmed as an oracle attack. The attacker manipulated the oracle price of collateral on Loopscale to borrow 5.8 million dollars, draining funds from the lending pool. RateX's protocol itself has no security issues, and no RateX users suffered losses in this incident."*
+
+RateX also confirmed it is assisting Loopscale in tracking the hacker and recovering funds.
+
+As soon as Loopscale detected the exploit, it halted all market functions to prevent further damage — **disabling new loops, deposits and withdrawals** across the platform while working to triage the situation.
+
+In the immediate aftermath, Loopscale's handling of the crisis drew frank praise. The team issued a clear initial disclosure, re-enabled critical functions like loan repayments and loop closing by the following day (big for protecting borrowers from unforeseen liquidations), and began coordinating with law enforcement and security professionals.
+
+Then, on April 28, Loopscale announced it had successfully established contact with the attacker. The exploiter had responded to an [onchain message](https://etherscan.io/tx/0x6dcbf6de26631d18eed84410e06741a1940e7f1fc7b7660bf82796d4d133d646) proposing a white hat resolution, agreeing (tentatively) to return a portion of the stolen funds in exchange for a bounty.
+
+While Loopscale initially offered a 10% reward, the exploiter [countered](https://etherscan.io/tx/0x98b6a312a4ab4b1d6c397d64b5e33dba1cc0d3cad3b89fb5d7fa28c28383115c) with a 20% ask, citing frozen assets on crosschain bridges and offering to immediately return part of the stolen funds to prove good faith.
+
+## Recovery Efforts and Negotiations
+
+Following the exploit, Loopscale's team moved quickly to mitigate damage and recover stolen funds. On April 27, they sent an [onchain message](https://etherscan.io/tx/0x6dcbf6de26631d18eed84410e06741a1940e7f1fc7b7660bf82796d4d133d646) to the exploiter with a straightforward proposal: **return 90% of the stolen funds in exchange for a 10% bounty and full release of liability**.
+
+The team established a 24-hour deadline for response before escalating to law enforcement. This decisive action showed their commitment to resolving the situation while providing the attacker a reasonable path to return funds without severe consequences.
+
+By 3:52 PM Eastern Time on April 28, Loopscale [announced](https://x.com/LoopscaleLabs/status/1916183179469246626) they had received a response from the exploiter indicating willingness to negotiate. The attacker countered with a [20% bounty request](https://etherscan.io/tx/0x98b6a312a4ab4b1d6c397d64b5e33dba1cc0d3cad3b89fb5d7fa28c28383115c), citing complications with frozen assets on crosschain bridges and offering immediate partial returns as a demonstration of good faith.
+
+## Funds Recovery Progress
+
+The negotiations quickly bore fruit. In an April 29 update posted to X, Loopscale confirmed that approximately **19,463 Wrapped SOL (WSOL) worth roughly $2.88 million** had been returned to its wallets since April 28.
+<Image src="/content/loopscale/loopscale6.png" alt="Loopscale Recovery Efforts" width={500} height={500} className="mx-auto" />
+
+The funds were returned in three separate transactions:
+- **5,000 WSOL** (~$740,000) - Initial good faith return
+- **10,000 WSOL** (~$1.48 million) - First major recovery
+- **4,463 WSOL** (~$660,000) - Follow-up return
+
+This represents **nearly half of the stolen funds**, a significant recovery compared to typical outcomes in DeFi exploits. The team continues to pursue "an amicable resolution" regarding the remaining stolen assets.
+
+## Impact Mitigation and Community Response
+
+Unlike many DeFi protocol exploits that result in full losses, Loopscale's swift response has earned [praise from the broader DeFi community](https://x.com/teethrichards/status/1916490751677972651). Security researchers and industry participants have highlighted several aspects of their crisis management:
+
+1. **Immediate protocol pause** to prevent further damage
+2. **Clear, transparent communication** about the exploit
+3. **Re-enabling of critical functions** like loan repayments and loop closing by the following day
+4. **Structured approach to negotiations** with the attacker
+5. **Regular updates to the community** about recovery progress
+
+The exploit primarily affected vault depositors, while borrowers and users of the looping functionality remained unimpacted. This targeted impact, affecting only about 12% of total platform assets, allowed Loopscale to maintain operational stability for the majority of its users during the recovery process.
+
+For affected users, the team has committed to transparent communication about how recovery will be structured. While the exploit has certainly tested the young protocol, launched just two weeks prior to the incident, Loopscale's handling of the crisis provides a case study in effective DeFi security incident response.
+
+The vulnerability has also prompted renewed focus on oracle security across the ecosystem, with [RateX founder Sean Hu confirming](https://blockworks.co/news/solana-defi-protocol-launches-efficiency) that they are assisting Loopscale in tracking the hacker and recovering funds, while emphasizing that *"RateX's protocol itself has no security issues."*

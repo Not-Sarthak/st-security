@@ -1,0 +1,65 @@
+import Image from 'next/image';
+
+<Cover
+  src="/covers/parcl.png"
+  alt="Parcl"
+  caption="parcl.co"
+/>
+
+On August 19–20, 2024, Parcl, a decentralized real estate trading platform built on Solana, suffered a coordinated front-end and social account compromise. The attackers hijacked the website’s domain registrar and Twitter account to reroute users to a malicious interface. This incident led to users unknowingly authorizing transactions that drained assets from their Solana wallets, all while being shown false confirmations through Phantom.
+
+## Why would you use Parcl?
+Parcl offers tokenized, liquid real estate investment by allowing users to speculate on the price movements of real estate indexes. Key features include:
+- Access to real estate indexes based on city-specific market data.
+- The ability to long or short real estate prices.
+- Yield opportunities through liquidity provision.
+- Transparency, with indexes built from millions of real estate data points via Parcl Labs.
+
+## How did the Hacker Steal Funds?
+A high-level overview of the strategy executed by the attacker:
+1. Compromised domain registrar: The attacker gained access to Parcl's domain name system (DNS), which controls where the parcl.co website points.
+2. Redirected users: The DNS was changed to lead users to a fake website controlled by the hacker.
+3. Phishing with fake frontend: The fake site looked identical to Parcl’s actual interface but was designed to steal from wallets.
+4. Malicious transactions: Users were tricked into signing wallet transactions. The transactions appeared safe but secretly allowed the hacker to withdraw tokens.
+5. Bitflipping technique: The transactions used a hidden logic trick that made wallet previews look safe while removing the refund when the transaction was actually processed.
+6. Twitter manipulation: The attacker also used Parcl's compromised Twitter to promote the fake website and trick more users into visiting it.
+
+<Image src="/content/parcl/parcl1.png" alt="Parcl" width={1000} height={1000} className='mx-auto'/>
+
+## Technical Concepts:
+1. Frontend Hijack (Fake Website): The hackers changed Parcl’s website direction at the DNS level so users visiting parcl.co were taken to a malicious clone site.
+2. Bitflipping Logic: A fake transaction was shown as sending 100 USDC and receiving 100 USDC back (making it look safe). In reality, the refund was removed at the last second, so users only sent money and got nothing back.
+3. Wallet Simulation Exploitation: Solana wallets like Phantom simulate transactions before showing you what will happen. The attacker abused this by showing a fake preview that didn’t reflect the real outcome.
+4. Social Engineering: With control over Parcl’s Twitter, the attacker posted fake promotions and links, which made users trust the site even more.
+
+## Understanding the Bitflipping Scam:
+Let’s say you’re on a site that asks you to approve a transaction in your Phantom wallet:
+- The transaction preview says: “Send 100 USDC, then receive 100 USDC back.” Looks like nothing changes. So, you approve it.
+- But when the transaction actually runs, a hidden setting is flipped behind the scenes.
+- Now it says: “Send 100 USDC. Receive nothing.”
+- You just lost 100 USDC — but Phantom showed you something else before you clicked.
+
+This is bitflipping. It relies on tricking your wallet’s preview screen and flipping a value right before execution.
+
+## Technical Explanation:
+On August 19, the attacker accessed Parcl’s DNS settings and redirected its website (parcl.co) to a server they controlled. That fake site mimicked the real one perfectly, and most users couldn’t tell the difference.
+When users connected their Phantom wallets to this fake site, they were shown transactions that looked harmless. But behind the scenes, a clever scam was set up:
+- The fake site asked users to approve transactions using bitflipping.
+- Wallets like Phantom showed that money would be refunded.
+- But the actual transaction, once submitted, skipped the refund.
+This scam technique exploited a weakness in how wallet previews display transactions.
+While this was happening, the attacker had also hijacked Parcl’s official Twitter account. They posted fake announcements about rewards, which convinced even more users to go to the malicious site.
+Within 30 minutes, Parcl’s team:
+- Detected the issue
+- Froze activity on their platform
+- Regained control of DNS and started restoring the site
+
+## Response and Mitigation
+- Parcl immediately froze exchange activity within 30 minutes of detection.
+- DNS was restored and pointed back to the real server.
+- Twitter account recovery was initiated.
+- Public warnings were issued on Discord and external security channels.
+- Users were advised to open tickets if they were affected.
+
+## Official Links:
+- [Parcl Tweet](https://x.com/parclhelp/status/1825658452427026806)

@@ -1,0 +1,80 @@
+import Image from 'next/image';
+
+<Cover
+  src="/covers/web3js.png"
+  alt="Solana Web3.js"
+  caption=""
+/>
+
+## Why would you use Solana Web3.js?
+
+@solana/web3.js is a popular client library used by JavaScript developers to interact with the Solana blockchain. It provides utilities for several common operations such as querying the blockchain via RPC, creating and managing cryptographic keypairs (wallets) and building and submitting transactions.
+
+Developers who build JavaScript applications on Solana typically depend on third party packages. The majority of those packages, including the @solana/web3.js package, are hosted in the Node Package Manager (npm) registry. Anyone can download and install packages from npm, but only authorized users can publish packages to it.
+
+## How did the Hacker Exploit it?
+
+On Tuesday, December 3, 2024, developers with privileges to publish packages in the @solana namespace on npm were targeted by a spear phishing campaign. The hacker sent several emails inviting them to collaborate on a private package. The invite was crafted in such a way that made it appear to have originated from another member of the team. 
+
+When clicked, the successful spear phishing campaign routed a developer with publish access to a clone of the npm website controlled by the hacker where the developer entered their npm username and password, and completed a round of two-factor authentication. These authorizations were sufficient for the hacker to publish two modified versions of @solana/web3.js to the public npm registry. Both modified versions contained identical code, other than the version number itself.
+- v1.95.6
+- v1.95.7
+
+In the modified versions, malicious code was added to these methods:
+- new Account()
+- Keypair.fromSecretKey()
+- Keypair.fromSeed()
+- Ed25519Program.createInstructionWithPrivateKey()
+- Secp256k1Program.createInstructionWithPrivateKey()
+
+As a result, applications that directly or indirectly called any of those methods may have had their private key material sent to a server controlled by the attacker.
+
+The Solana protocol was not compromised by the web3.js exploit.
+
+<Image src="/content/web3js/web3js1.png" alt="Solana Web3.js Exploit" width={1000} height={1000} className="mx-auto"/>
+
+## Detection and Mitigation:
+
+A core contributor of @solana/web3.js was alerted of the exploit by an ecosystem team that had installed one of the malicious versions into their application and had deployed it. They subsequently noticed several unauthorized transfers of assets from wallets that they owned into an account associated with the address FnvLGtucz4E1ppJHRTev6Qv4X7g8Pw6WPStHCcbAKbfx.
+
+When the exploit was detected and identified, the two malicious versions of @solana/web3.js that were published to npm by the attacker were immediately deprecated to prevent package manager software, like npm, pnpm, and Yarn, from selecting them for installation from that point forward. This deprecation was completed at approximately 8:52pm UTC. The malicious versions were reported to npm and subsequently removed from their registry entirely by 12:22am UTC on Wednesday, December 4.
+
+## Threat Assessment:
+
+This issue only appears to affect projects that directly handle private keys and were also updated to one of the malicious versions. Developers should verify that none of their applications were ever built and deployed using version 1.95.6 or 1.95.7 of @solana/web3.js as a direct or transitive dependency.
+
+Developers that believe they might be compromised should also rotate any suspect authority keys, including but not limited to multisigs, program authorities, and server keypairs.
+
+## Prevention:
+All users in the @solana and @solana-program organizations on npm have been removed and replaced with a new system where write access is granted through the issuance of revocable, granular access tokens.
+
+## Timeline:
+- December 3, 2024
+    - 3:20pm UTC
+        - A spear phishing email was opened and clicked by a @solana npm org member with publish access. This member’s username, password, and two-factor authentication were obtained by the attacker.
+    - Within moments
+        - Two unauthorized versions of the @solana/web3.js package were published to npm: 1.95.6 and 1.95.7. 
+    - 7:27pm UTC
+        - An investigation was launched by an Anza engineer after having received a report that a malicious version of @solana/web3.js had been installed by an ecosystem team.
+    - 7:30pm UTC
+        - The credentials of the account that was used to publish the malicious packages were revoked from npm.
+    - 7:39pm UTC
+        - Version 1.95.5 was restored as the ‘latest’ version on npm to prevent it from being installed by package managers seeking to install the latest version
+        - Version 1.95.6 was marked as deprecated to prevent it from being installed by package managers
+    - 8:25pm UTC
+        - A clean version of @solana/web3.js without the malicious code was published as 1.95.8
+    - 8:52pm UTC
+        - After a struggle with the npm API, version 1.95.7 was marked as deprecated to prevent it from being installed by package managers
+    - 9:05pm UTC
+        - A Tweet was posted by an Anza developer to warn developers to avoid the malicious versions [link](https://x.com/trentdotsol/status/1864053347461771321)
+    - 11:12pm UTC
+        - A Tweet was posted by the Anza main account to warn developers to avoid the malicious versions [link](https://x.com/anza_xyz/status/1864085236432134264)
+
+- December 4, 2024
+    - ~12:22 am UTC
+        - Versions 1.95.6 and 1.95.7 were removed from the npm registry entirely by the npm registry staff.
+    - 8:12am UTC
+        - A GitHub Security Advisory (GHSA-jcxm-7wvp-g6p5) was published as a way of delivering a warning about the malicious versions directly to developers via automated tooling (eg. Dependabot)
+
+> With millions of downloads and thousands of library dependents the likely blast radius widens to thousands of developers, and a yet to be determined number of users. This attack is a stark reminder that the trust in software integrity is at an all time low, and that open source security is a far greater challenge than keeping up with the news and filtering out newly published or untrusted packages. 
+> ~ [Tomislav Peričin](https://www.linkedin.com/in/tomislav-peri%C4%8Din-746064286/)

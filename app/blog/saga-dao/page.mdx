@@ -1,0 +1,83 @@
+import Image from 'next/image';
+
+<Cover
+  src="/covers/saga-dao.png"
+  alt="Saga DAO"
+  caption=""
+/>
+
+## Executive Summary
+On Wednesday, January 19, Saga DAO experienced a security incident resulting in the unauthorized withdrawal of approximately 750 SOL (~$60,000) from the organization's treasury. This report documents the incident, response measures, and preliminary findings.
+
+## Incident Details
+
+### Date of Incident
+January 19, 2023
+
+### Assets Affected
+- 750 SOL (~$60,000) from Saga DAO treasury
+- 500 SOL (~$35,000) from personal funds of pseudonymous founder zkRedDevil
+
+### Threat Vector
+Reported as unauthorized access to a founder's personal computer via a remote access tool, bypassing intended multi-signature security measures.
+
+## Technical Analysis
+
+### Vulnerability Exploited
+The DAO treasury funds were stored in a wallet controlled by zkRedDevil. Despite intended multi-signature protections, these security features were not properly activated, creating a single point of failure.
+
+### Attack Methodology
+According to zkRedDevil's account, malicious actors gained access to their personal computer through a remote exploit, compromising the wallet holding both personal funds and organization assets.
+
+### Timeline
+1. The DAO treasury contained approximately 1000 SOL accumulated through donations and membership fees
+2. 750 SOL was transferred to an address controlled by zkRedDevil
+3. Shortly after, these funds were transferred to another wallet address
+4. After the incident, zkRedDevil transferred the remaining 300 SOL to a different wallet and relinquished control of the DAO's Discord server
+
+<Image src="/content/saga-dao/saga-dao1.png" alt="Saga DAO" width={1000} height={1000} className="mx-auto"/>
+<Image src="/content/saga-dao/saga-dao2.png" alt="Saga DAO" width={1000} height={1000} className="mx-auto"/>
+
+## Disputed Circumstances
+
+### Alternative Explanation
+Another pseudonymous founder, Ashen, has disputed the hack narrative and alleged possible insider misappropriation by zkRedDevil. This assessment is based on:
+
+1. Removal of an earlier Discord announcement in which zkRedDevil allegedly expressed regret and acknowledged making a mistake
+2. Lack of multi-signature activation despite established security protocols
+3. Suspicious transaction patterns
+
+### Counterpoints
+zkRedDevil maintains their innocence and claims to be a victim of the same security breach, citing:
+1. Personal financial losses of 500 SOL
+2. Substantial time invested in DAO development (reported as "20/24 since a month")
+
+## Organizational Impact
+
+### Governance Crisis
+The incident has created significant uncertainty within the Saga DAO community. Ashen has initiated efforts to restructure leadership, specifically targeting council members who approved the fund transfer.
+
+### Operational Security Deficiencies
+This incident highlights critical security vulnerabilities in the organization's treasury management:
+1. Failure to implement multi-signature wallet security despite stated intentions
+2. Insufficient verification procedures for treasury transfers
+3. Excessive trust in pseudonymous environments without adequate controls
+
+## Recommendations
+
+### Immediate Actions
+1. Complete forensic analysis of all transaction data on the Solana blockchain
+2. Implement proper multi-signature security for all remaining treasury funds
+3. Establish clear protocols for treasury fund transfers requiring multiple verifications
+
+### Structural Reforms
+1. Develop comprehensive security policies for treasury management
+2. Implement proper governance controls with checks and balances
+3. Create transparency protocols for founder actions affecting DAO assets
+4. Consider legal options for asset recovery if malfeasance is proven
+
+## Conclusion
+This incident demonstrates the critical security challenges facing decentralized autonomous organizations, particularly regarding treasury management and governance in pseudonymous environments. Further investigation is required to determine the exact nature of the breach and appropriate remediation measures.
+
+---
+*This security report contains preliminary findings based on available information. The investigation remains ongoing.*

@@ -3,24 +3,417 @@ import Image from 'next/image';
 <Cover
   src="/covers/cypher.png"
   alt="Cypher Protocol"
-  caption=""
+  caption="cypherlabs.xyz"
 />
 
-In August 2023, the Cypher Protocol was the victim of a hack. The attacker exploited a vulnerability in the project&apos;s smart contracts to steal an estimated $1 million from the project.
+On August 7th, 2023, Cypher Protocol was exploited for approximately $1 million. The attacker uncovered bugs in the protocol's isolated margin sub-accounts system, allowing them to borrow more funds than their collateral should permit.
 
 ## Why would you use Cypher Protocol?
-Cypher Protocol is a DEX created in Solana. That is, a decentralized advanced trading platform with tokens and derivatives. 
 
-It also has a portion of "borrows" that generate revenue for those who cover them.
+Cypher Protocol is a decentralized exchange (DEX) built on Solana, offering an advanced trading platform for tokens and derivatives. Unlike typical DEXs, Cypher provides sophisticated margin trading features with lending and borrowing capabilities that generate revenue for liquidity providers.
 
-It stands out for its difference compared to other DEX, since it has a more complex and detailed interface, so cypher is usually used by more experienced users.
+The platform stands out for its complex and detailed interface, making it a preferred choice for experienced traders seeking advanced trading functionalities in the Solana ecosystem.
+
+<Image src="/content/cypher/cypher1.png" alt="Cypher Protocol" width={500} height={500} className="mx-auto" />
 
 ## How did the Hacker Steal Funds?
-The Cypher Protocol enables marginal lending, borrowing, and trading. The protocol is structured so that a primary user account — called CypherAccounts — can have multiple attached CypherSubAccounts. The primary account will cache the data associated with each of its associated sub-accounts.
 
-By default, all sub-accounts are cross-collateralized with the master account, allowing a deposit into one to be used as collateral for a borrow from another. The protocol allows a sub-account to be isolated — disabling this functionality — but an error in the code when switching to an isolated state causes the master account not to track this change.
+The Cypher Protocol enables marginal lending, borrowing, and trading. The protocol is structured so that a primary user account — called CypherAccounts — can have multiple attached CypherSubAccounts. The primary account caches data associated with each of its sub-accounts.
 
-Another error in the code dealt with margin checks before allowing a borrow. An error in these checks and the fact that oracle price feeds were not yet active allowed a user to perform borrows when they should not have been able to.
-The attacker exploited this vulnerability using multiple different primary accounts. As a result, they were able to drain an estimated $1 million in assets from the Cypher Protocol.
-<Image src="/content/cypher/cypher1.png" alt="Cypher" width={500} height={500} className="mx-auto" />
+By default, all sub-accounts are cross-collateralized with the master account, allowing a deposit in one to be used as collateral for borrowing from another. The protocol allows a sub-account to be isolated — disabling this functionality — but an error in the code when switching to an isolated state caused the master account not to track this change properly.
 
+Another critical error in the code dealt with margin checks before allowing a borrow. This flaw, combined with the fact that oracle price feeds were not yet fully activated, allowed the attacker to perform borrows when they should have been rejected by the system.
+
+The attacker exploited these vulnerabilities using multiple primary accounts to drain approximately $1 million in various assets from the Cypher Protocol.
+
+## Post-Exploit Response
+
+After discovering the exploit, Cypher Protocol immediately froze its smart contract to prevent further theft. The team reached out to the attacker in an attempt to negotiate the return of stolen funds.
+
+According to blockchain explorer data, the wallet suspected to be tied to the exploit stole approximately:
+- 15,452 SOL
+- 14,675 jitoSOL
+- 8,750 mSOL
+- 1 wETH
+- 149,205 USDC
+- Small amounts of other tokens
+
+In the hours following the exploit, the alleged wallet transferred 30,000 USDC to Binance's Solana USDC address "kiing.sol" in a possible attempt to cash out the stolen funds.
+
+Community members responded by sending NFTs to the attacker's wallet with messages requesting the return of funds. One message read: "Seriously though, you used Binance and KuCoin to fund and to try and get 30k out. People will find you. Please do the right thing and give the rest back."
+<Image src="/content/cypher/cypher2.png" alt="Cypher Protocol" width={500} height={500} className="mx-auto" />
+
+## Incident & Response Timeline
+
+- **2:18 pm UTC** - The attacker makes the first deposit into Cypher of 0.1 USDC
+- **3:04 pm UTC** - The attacker successfully exploits the protocol using the first master account created, leaving the system with ~$1.925 of bad debt
+- **3:04 pm - 6:29 pm UTC** - The attacker proceeds to create 15 different master accounts and repeats the same steps, starting with larger deposits to withdraw greater amounts
+- **6:15 pm UTC** - The team notices unusually large amounts of borrows across multiple assets (some triggering borrow caps that prevented pools from being entirely drained) and begins investigating internally
+- **6:31 pm UTC** - The team becomes aware of an unknown attack vector and mobilizes to halt pools and contact relevant parties
+- **7:47 pm UTC** - The contract is frozen to prevent further asset theft and stop users from depositing
+- **7:59 pm UTC** - The community is notified via a public announcement of the exploit
+
+From this point, all efforts were dedicated to tracking funds, identifying the attacker, and uncovering all issues related to the attack vector.
+
+<Image src="/content/cypher/cypher3.png" alt="Cypher Protocol" width={500} height={500} className="mx-auto" />
+<Image src="/content/cypher/cypher4.png" alt="Cypher Protocol" width={500} height={500} className="mx-auto" />
+
+## Technical Explanation
+
+The Cypher program has multiple types of user accounts that store data and enable functionalities like lending, borrowing, and margin trading. The primary accounts, named in code as **CypherAccount** (master account) and **CypherSubAccount** (sub-account), work together to make the system function.
+
+The master account acts as a cache for every sub-account linked to it. Data from each sub-account—including assets value, liabilities value, and collateral ratio—is cached within the master account whenever a user interacts with the program. Here's how these accounts are structured:
+
+```rust
+#[assert_size(aligns, 128)]
+#[zero_copy(unsafe)]
+#[derive(PartialEq)]
+pub struct SubAccountCache {
+    /// the value of the assets of this account
+    pub assets_value: i128, // 16
+    /// the value of the liabilities of this account
+    pub liabilities_value: i128, // 32
+    /// the margin c-ratio of this sub account
+    pub c_ratio: i128, // 48
+    /// slot of the last cache update
+    pub updated_at: u64, // 56
+    /// the sub account margining
+    pub margining: SubAccountMargining, // 57
+    _padding: [u8; 7], // 64
+    /// the sub account
+    pub sub_account: Pubkey, // 96
+    /// the value of volatile assets of this account
+    pub volatile_assets_value: i128, // 112
+    /// the value of volatile liabilities of this account
+    pub volatile_liabilities_value: i128, // 128
+}
+
+#[assert_size(aligns, 3200)]
+#[account(zero_copy(unsafe))]
+pub struct CypherAccount {
+    /// the bump seed
+    pub bump_seed: [u8; 1], // 1
+    /// the account number seed
+    pub account_number_seed: [u8; 1], // 2
+    /// the account type
+    pub account_type: AccountType, // 3
+    /// the fee tier of this account
+    pub fee_tier: u8, // 4
+    _padding: [u8; 12], // 16
+
+    /// the clearing this account belongs to
+    pub clearing: Pubkey, // 48
+    /// the account's authority, should match sub accounts authority
+    pub authority: Pubkey, // 80
+    /// the account's delegate
+    pub delegate: Pubkey, // 112
+    /// the sub account cache
+    pub sub_account_caches: [SubAccountCache; 24], // 3184 - occupies 3072 bytes
+    /// slot of the last account update
+    pub updated_at: u64, // 3192
+    _padding2: [u8; 8], // 3200
+}
+
+#[assert_size(aligns, 5632)]
+#[account(zero_copy(unsafe))]
+pub struct CypherSubAccount {
+    /// the bump seed
+    pub bump_seed: [u8; 1], // 1
+    /// the account number seed
+    pub account_number_seed: [u8; 1], // 2
+
+    /// the margining type of this account
+    pub margining_type: SubAccountMargining, // 3
+    _padding: [u8; 13], // 16
+
+    /// the alias of the account
+    pub account_alias: [u8; 32], // 48
+
+    /// the associated clearing
+    pub clearing: Pubkey, // 80
+    /// the master account
+    pub master_account: Pubkey, // 112
+    /// the authority
+    pub authority: Pubkey, // 144
+    /// the delegate
+    pub delegate: Pubkey, // 176
+    /// the slot of the last update of this account
+    pub updated_at: u64, // 184
+    /// the amount of claimable liquidity mining rewards
+    pub claimable_rewards: u64, // 192
+    _padding2: [u64; 7], // 248
+    _padding3: [u8; 8],  // 256
+
+    /// the positions of this sub account
+    pub positions: [PositionSlot; 24], // 5632 - occupies 5376 bytes
+}
+```
+
+By default, any sub-account created is cross-collateralized within the master account. This means users can deposit assets into one sub-account and borrow using a different one. This feature requires a specific instruction called **UpdateAccountMargin** to cache the state of sub-accounts within the master account, which was visible in the attacker's transactions.
+
+To allow sub-accounts to be margined separately (isolated margining), an enumerator is stored within both the sub-account and its cache in the master account:
+
+```rust
+#[derive(Debug, Clone, Copy, AnchorDeserialize, AnchorSerialize, PartialEq)]
+pub enum SubAccountMargining {
+    /// under this type of sub account margining, the respective sub account
+    /// is margined along with all other sub accounts for a given master account
+    /// this means that it's positions will influence the overall collateral ratio
+    /// of the master account
+    Cross,
+    /// under this type of sub account margining, the respective sub account
+    /// is margined in an isolated manner, which means that it's positions will
+    /// not influence the overall collateral ratio of the master account
+    Isolated,
+}
+```
+
+### The First Vulnerability: Missing Update of Margining Mode
+
+The **EditSubAccountMargining** instruction is used to change the margining mode for a specific sub-account. Here's the problematic handler code:
+
+```rust
+pub fn handler(
+    ctx: Context<EditSubAccountMargining>,
+    margining_type: SubAccountMargining,
+) -> Result<()> {
+    let clock = Clock::get()?;
+    let clearing = ctx.accounts.clearing.load()?;
+    let cache_account = ctx.accounts.cache_account.load()?;
+    let mut master_account = ctx.accounts.master_account.load_mut()?;
+    let mut sub_account = ctx.accounts.sub_account.load_mut()?;
+
+    sub_account.margining_type = margining_type;
+
+    let sub_account_idx = master_account
+        .get_sub_account_idx(&ctx.accounts.sub_account.key())
+        .unwrap();
+
+    let (
+        c_ratio,
+        _volatile_c_ratio,
+        assets_value,
+        volatile_assets_value,
+        liabilities_value,
+        volatile_liabilities_value,
+    ) = sub_account
+        .get_margin_c_ratio_components(&cache_account, MarginCollateralRatioType::Initialization);
+
+    master_account.update_account_cache(
+        sub_account_idx,
+        assets_value,
+        volatile_assets_value,
+        liabilities_value,
+        volatile_liabilities_value,
+        c_ratio,
+        clock.slot,
+    )?;
+
+    master_account.updated_at = clock.slot;
+    sub_account.updated_at = clock.slot;
+
+    // if the sub account is margined in an isolated way we have to check c-ratios on the sub account itself
+    if sub_account.margining_type == SubAccountMargining::Isolated {
+        check!(
+            c_ratio >= clearing.margin_init_ratio(),
+            SubAccountCRatioBelowOptimal
+        );
+    } else {
+        // check if any sub account has a stale price that would affect margin ratios
+        for cache in master_account.sub_account_caches.iter() {
+            if cache.margining == SubAccountMargining::Cross
+                && cache.sub_account != Pubkey::default()
+            {
+                check!(
+                    clock.slot - cache.updated_at <= ORACLE_PRICE_TTL_IN_SLOT,
+                    StaleAccountCache
+                );
+            }
+        }
+        // otherwise the sub account is margined in a cross way so we check c-ratios on the master account
+        let (c_ratio, _volatile_c_ratio) = master_account.get_margin_c_ratio();
+        check!(
+            c_ratio >= clearing.margin_init_ratio(),
+            MasterAccountCRatioBelowOptimal
+        );
+    }
+
+    emit!(SubAccountActionLog {
+        master_account: ctx.accounts.master_account.key(),
+        sub_account: ctx.accounts.sub_account.key(),
+        authority: ctx.accounts.authority.key(),
+        delegate: Pubkey::default(),
+        margining_type: sub_account.margining_type,
+        action: SubAccountAction::ChangeMarginingType,
+    });
+    Ok(())
+}
+```
+
+The critical issue here is that while the sub-account's state is updated to reflect the new margining mode, the corresponding margining mode in the master account's cache of the sub-account is not updated. This creates a state where the sub-account is marked as isolated in its own data structure, but its cache in the master account still shows it as cross-collateralized.
+
+This discrepancy means any master account with linked isolated margin sub-accounts enters a corrupted state, where there's inconsistency between the actual sub-account and its cached representation in the master account.
+
+### The Second Vulnerability: Flawed Margin Checks
+
+Every user-facing instruction that involves assets implements a **MarginChecksContext** trait. This trait includes the function that performs margin checks based on account data and collateral ratios. Here's the problematic code:
+
+```rust
+pub trait MarginChecksContext<'info> {
+    fn clearing(&self) -> &AccountLoader<'info, Clearing>;
+    fn cache_account(&self) -> &AccountLoader<'info, CacheAccount>;
+    fn master_account(&self) -> &AccountLoader<'info, CypherAccount>;
+    fn sub_account(&self) -> &AccountLoader<'info, CypherSubAccount>;
+
+    /// performs margin checks
+    ///
+    /// if the sub account is margined in an isolated way we have to check the sub account's c-ratio
+    ///
+    /// if the sub account is not margined in an isolated way we will simply check the master account's c-ratio
+    fn check_margin(
+        &self,
+        clearing: &Clearing,
+        master_account: &CypherAccount,
+        sub_account: &CypherSubAccount,
+        pre_account_c_ratio: I80F48,
+        pre_account_volatile_c_ratio: I80F48,
+        pre_sub_account_c_ratio: I80F48,
+        pre_sub_account_volatile_c_ratio: I80F48,
+        post_sub_account_c_ratio: I80F48,
+        post_sub_account_volatile_c_ratio: I80F48,
+        did_borrow: bool,
+    ) -> Result<()> {
+        let clock = Clock::get()?;
+        let margin_init_ratio = clearing.margin_init_ratio();
+
+        // if the sub account is margined in an isolated way we have to check c-ratios on the sub account itself
+        if sub_account.margining_type == SubAccountMargining::Isolated {
+            #[cfg(not(feature = "mainnet-beta"))]
+            msg!(
+                "Sub Account - C-Ratio: {} | Volatile C-Ratio: {}",
+                post_sub_account_c_ratio,
+                post_sub_account_volatile_c_ratio
+            );
+            // if during this operation there was an increase in borrows we have to perform different checks
+            // the idea here is to apply the different margin calculations which take into account volatile assets
+            if did_borrow {
+                // if the pre-c-ratio is already below init ratio, we need to check that the ratio improved
+                if pre_sub_account_volatile_c_ratio <= margin_init_ratio {
+                    check!(
+                        post_sub_account_volatile_c_ratio >= pre_sub_account_volatile_c_ratio,
+                        SubAccountCRatioBelowOptimal
+                    );
+                } else {
+                    // otherwise we check that the post-c-ratio is above init ratio
+                    check!(
+                        post_sub_account_volatile_c_ratio >= margin_init_ratio,
+                        SubAccountCRatioBelowOptimal
+                    );
+                }
+            } else {
+                // if the pre-c-ratio is already below init ratio, we need to check that the ratio improved
+                if pre_sub_account_c_ratio <= margin_init_ratio {
+                    check!(
+                        post_sub_account_c_ratio >= pre_sub_account_c_ratio,
+                        SubAccountCRatioBelowOptimal
+                    );
+                } else {
+                    // otherwise we check that the post-c-ratio is above init ratio
+                    check!(
+                        post_sub_account_c_ratio >= margin_init_ratio,
+                        SubAccountCRatioBelowOptimal
+                    );
+                }
+            }
+        } else {
+            // check if any sub account has a stale price that would affect margin ratios
+            for cache in master_account.sub_account_caches.iter() {
+                if cache.margining == SubAccountMargining::Cross
+                    && cache.sub_account != Pubkey::default()
+                {
+                    check!(
+                        clock.slot - cache.updated_at <= ORACLE_PRICE_TTL_IN_SLOT,
+                        StaleAccountCache
+                    );
+                }
+            }
+            // otherwise the sub account is margined in a cross way so we check c-ratios on the master account
+            let (post_account_c_ratio, post_account_volatile_c_ratio) =
+                master_account.get_margin_c_ratio();
+            #[cfg(not(feature = "mainnet-beta"))]
+            msg!(
+                "Master Account - C-Ratio: {} | Volatile C-Ratio: {}",
+                post_account_c_ratio,
+                post_account_volatile_c_ratio
+            );
+            // if during this operation there was an increase in borrows we have to perform different checks
+            // the idea here is to apply the different margin calculations which take into account volatile assets
+            if did_borrow {
+                // if the pre-c-ratio is already below init ratio, we need to check that the ratio improved
+                if pre_account_volatile_c_ratio <= margin_init_ratio {
+                    check!(
+                        post_account_volatile_c_ratio >= pre_account_volatile_c_ratio,
+                        MasterAccountCRatioBelowOptimal
+                    );
+                } else {
+                    // otherwise we check that the post-c-ratio is above init ratio
+                    check!(
+                        post_account_volatile_c_ratio >= margin_init_ratio,
+                        MasterAccountCRatioBelowOptimal
+                    );
+                }
+            } else {
+                // if the pre-c-ratio is already below init ratio, we need to check that the ratio improved
+                if pre_account_c_ratio <= margin_init_ratio {
+                    check!(
+                        post_account_c_ratio >= pre_account_c_ratio,
+                        MasterAccountCRatioBelowOptimal
+                    );
+                } else {
+                    check!(
+                        post_account_c_ratio >= margin_init_ratio,
+                        MasterAccountCRatioBelowOptimal
+                    );
+                }
+            }
+        }
+        Ok(())
+    }
+}
+```
+
+### Oracle Price Feeds and Volatility Calculation
+
+The Cypher Protocol implemented concepts of "volatile assets" by merging multiple oracle price feeds (Pyth, Switchboard, and Chainlink) to produce a Time-Weighted Average Price (TWAP). Bands were defined around this TWAP, and if an asset's instant price deviated outside these bands, it would be classified as volatile.
+
+For borrowing operations, the protocol used two different collateral ratio calculations:
+
+Standard collateral ratio:
+```
+c-ratio = assets / liabilities
+```
+
+Volatile collateral ratio:
+```
+volatile c-ratio = (assets - volatile assets) / (liabilities + volatile liabilities)
+```
+
+The critical vulnerability was in the margin check for isolated accounts during borrowing operations:
+
+```rust
+// if during this operation there was an increase in borrows we have to perform different checks
+// the idea here is to apply the different margin calculations which take into account volatile assets
+if did_borrow {
+    // if the pre-c-ratio is already below init ratio, we need to check that the ratio improved
+    if pre_sub_account_volatile_c_ratio <= margin_init_ratio {
+        check!(
+            post_sub_account_volatile_c_ratio >= pre_sub_account_volatile_c_ratio,
+            SubAccountCRatioBelowOptimal
+        );
+    }
+} else {
+ //...
+}
+```
+
+Because the merged oracle feeds had not yet been activated, both the pre-volatile and post-volatile collateral ratios were equal to zero when margin checks were performed. This, combined with the first vulnerability where the master account didn't properly track the isolated state of sub-accounts, allowed the attacker to borrow funds they shouldn't have been able to access.
