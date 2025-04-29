@@ -13,9 +13,15 @@ export const viewport: Viewport = {
 }
 
 export const metadata: Metadata = {
-  title: 'Nim - Personal website template',
+  title: 'Superteam Security',
   description:
-    'Nim is a free and open-source personal website template built with Next.js 15, React 19 and Motion-Primitives.',
+    'Superteam Security - Solana smart contract audits and more',
+  openGraph: {
+    images: ['/og.png'],
+  },
+  icons: {
+    icon: '/logo.svg',
+  },
 }
 
 const geist = Geist({
