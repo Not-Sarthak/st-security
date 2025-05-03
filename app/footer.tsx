@@ -72,7 +72,7 @@ export function Footer() {
       <div className="flex items-center justify-between">
         <a href="https://github.com/ibelick/nim" target="_blank">
           <TextLoop className="text-xs text-zinc-500">
-            <span>© 2024 Sarthak.</span>
+            <span>© 2025 Sarthak.</span>
             <span>Built with ❤️.</span>
           </TextLoop>
         </a>
